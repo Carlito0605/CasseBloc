@@ -21,7 +21,25 @@ void affEcranTitre(int rang) {
     }
 }
 
-/** Récupère l'appuie sur les flèche du joueur pour changer la sélection sur le menu titre.
+/** Affiche l'écran de sélection du nombre de joueurs.
+ * int rang : sélection du joueur sur l'écran, un nombre entre 1 et 3 */
+void affSelectNbJoueurs(int rang) {
+    if(rang == 1) {
+        printf("* 2 Joueurs\n");
+        printf("  3 Joueurs\n");
+        printf("  4 Joueurs\n");
+    } else if(rang == 2) {
+        printf("  2 Joueurs\n");
+        printf("* 3 Joueurs\n");
+        printf("  4 Joueurs\n");
+    } else if(rang == 3) {
+        printf("  2 Joueurs\n");
+        printf("  3 Joueurs\n");
+        printf("* 4 Joueurs\n");
+    }
+}
+
+/** Récupère l'appuie sur les flèche du joueur pour changer la sélection sur le menu.
  * int rang : sélection du joueur sur l'écran, un nombre entre 1 et 3 */
 int changeRang(int rang) {
     int input = getch();
@@ -43,17 +61,17 @@ int changeRang(int rang) {
 }
 
 int main() {
-    int rang = 1;
-    affEcranTitre(rang);
-    int input = getch();
+    int rangTitre = 1;
+    affEcranTitre(rangTitre);
+    int input;
     int isOnTitleScreen = 1;
 
     while(isOnTitleScreen) {
+        input = getch();
         //Si une flèche a été pressé
         if(input == 224) {
-            rang = changeRang(rang);
-            affEcranTitre(rang);
-            input = getch();
+            rangTitre = changeRang(rangTitre);
+            affEcranTitre(rangTitre);
         }
         //Si la touche "Entrée" est pressé
         else if(input == 13) {
@@ -62,15 +80,55 @@ int main() {
     }
 
     system("cls");
-    if(rang == 1) {
-        printf("SOLO\n");
-    } else if(rang == 2) {
-        int port = 8080;
-        printf("DEMARRER UN SERVEUR\n");
-    } else if(rang == 3) {
-        printf("REJOINDRE UN SERVEUR\n");
-    }
-    while(1);
+    int rangJoueur = 1;
+    input = 0;
 
+    if(rangTitre == 1) {
+        int isOnMenuSolo = 1;
+        printf("SOLO\n");
+        affSelectNbJoueurs(rangJoueur);
+        while(isOnMenuSolo) {
+            input = getch();
+            //Si une flèche a été pressé
+            if(input == 224) {
+                system("cls");
+                printf("SOLO\n");
+                rangJoueur = changeRang(rangJoueur);
+                affSelectNbJoueurs(rangJoueur);
+            }
+            //Si la touche "Entrée" est pressé
+            else if(input == 13) {
+                system("cls");
+                printf("Done.");
+                isOnMenuSolo = 0;
+            }
+        }
+    }
+    else if(rangTitre == 2) {
+        int port = 8080;
+        int isOnMenuDemarrer = 1;
+        printf("DEMARRER UN SERVEUR\n");
+        affSelectNbJoueurs(rangJoueur);
+        while(isOnMenuDemarrer) {
+            input = getch();
+            //Si une flèche a été pressé
+            if(input == 224) {
+                system("cls");
+                printf("DEMARRER UN SERVEUR\n");
+                rangJoueur = changeRang(rangJoueur);
+                affSelectNbJoueurs(rangJoueur);
+            }
+            //Si la touche "Entrée" est pressé
+            else if(input == 13) {
+                system("cls");
+                printf("Done.");
+                isOnMenuDemarrer = 0;
+            }
+        }
+    } else if(rangTitre == 3) {
+        printf("REJOINDRE UN SERVEUR\n\n");
+    }
+
+    while(1);
     return 0;
 }
