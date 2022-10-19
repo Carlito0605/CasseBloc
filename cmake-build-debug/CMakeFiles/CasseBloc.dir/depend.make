@@ -3,4 +3,5 @@
 
 CMakeFiles\CasseBloc.dir\main.c.obj: ..\bombs.h
 CMakeFiles\CasseBloc.dir\main.c.obj: ..\main.c
+CMakeFiles\CasseBloc.dir\main.c.obj: ..\main.h
 
