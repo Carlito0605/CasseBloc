@@ -9,20 +9,33 @@ void displayMap(char**map, int rows, int columns){
     }
 }
 
+char** bombExplosion(char**map, int rows, int columns, int v_pos, int h_pos, int range){
+
+    map[v_pos][h_pos] = 'X';
+
+    for(int i = 1; i<=range; i++){
+        if((v_pos+i) < rows) map[v_pos+i][h_pos] = '*';
+        if((v_pos-i) >= 0) map[v_pos-i][h_pos] = '*';
+        if((h_pos+i) < columns) map[v_pos][h_pos+i] = '*';
+        if((h_pos-i) >= 0) map[v_pos][h_pos-i] = '*';
+    }
+
+    return map;
+}
+
 char** checkBombs(char**map, int rows, int columns){
 
     for(int i = 0; i<rows; i++){
         for(int y = 0; y<columns; y++){
-            switch(map[i][y]){
-                case '3':
-                    map[i][y] = '4';
-                    break;
-                case '4':
-                    map[i][y] = '5';
-                    break;
-                case '5':
-                    map[i][y] = 'X';
-                    break;
+            if(map[i][y] == '3'){
+                map[i][y] = '4';
+            }
+            else if(map[i][y] == '4'){
+                map[i][y] = '5';
+            }
+            else if(map[i][y] == '5'){
+                //map[i][y] = 'X';
+                map = bombExplosion(map,rows,columns,i,y,2);
             }
         }
     }
