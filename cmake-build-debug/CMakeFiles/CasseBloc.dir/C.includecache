@@ -6,7 +6,13 @@
 
 #IncludeRegexTransform: 
 
+C:/Users/charl/CLionProjects/CasseBloc/bombs.h
+
 C:/Users/charl/CLionProjects/CasseBloc/main.c
 stdio.h
 -
+stdlib.h
+-
+bombs.h
+C:/Users/charl/CLionProjects/CasseBloc/bombs.h
 
