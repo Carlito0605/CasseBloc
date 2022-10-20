@@ -71,19 +71,34 @@ char** bombExplosion(char**map, int rows, int columns, int v_pos, int h_pos, int
     return map;
 }
 
-char** checkBombs(char**map, int rows, int columns){
+char** checkBombs(char**map, int rows, int columns, Player* players, char* bomb_car){
 
     for(int i = 0; i<rows; i++){
         for(int y = 0; y<columns; y++){
-            if(map[i][y] == '3'){
-                map[i][y] = '4';
+            if(map[i][y] == bomb_car[0]){
+                map[i][y] = bomb_car[1];
             }
-            else if(map[i][y] == '4'){
-                map[i][y] = '5';
+            else if(map[i][y] == bomb_car[1]){
+                map[i][y] = bomb_car[2];
             }
-            else if(map[i][y] == '5'){
+            else if(map[i][y] == bomb_car[2]){
                 //map[i][y] = 'X';
-                map = bombExplosion(map,rows,columns,i,y,2);
+                int range = 2;
+                switch (bomb_car[2]) {
+                    case 'C':
+                        range = players[0].range;
+                        break;
+                    case 'F':
+                        range = players[1].range;
+                        break;
+                    case 'I':
+                        range = players[2].range;
+                        break;
+                    case 'L':
+                        range = players[3].range;
+                        break;
+                }
+                map = bombExplosion(map,rows,columns,i,y,range);
             }
         }
     }
@@ -99,31 +114,57 @@ void test(int rows, int columns, Player* players){
         for(int y = 0; y<columns; y++) map[i][y] = '.';
     }
 
-    map[3][4] = '3';
-    map[2][7] = '3';
-    map[3][6] = '3';
-    map[7][4] = '3';
-    map[8][9] = '3';
-    map[1][1] = '3';
-    map[1][7] = '4';
-    map[9][4] = '4';
-    map[3][4] = '4';
-    map[9][1] = '4';
-    map[3][0] = '5';
-    map[9][11] = '5';
-    map[5][14] = '5';
-    map[6][9] = '5';
-    map[2][6] = '5';
-    map[4][2] = '5';
+    //tests :
+
+
+    map[3][4] = 'A';
+    map[3][6] = 'D';
+    map[8][9] = 'G';
+    map[1][1] = 'J';
+
+
+    map[1][7] = 'B';
+    map[9][4] = 'E';
+    map[3][4] = 'H';
+    map[9][1] = 'K';
+
+
+    map[9][11] = 'C';
+    map[2][6] = 'F';
+    map[0][12] = 'I';
+    map[9][2] = 'L';
+
 
     displayMap(map,rows,columns);
 
-    map = checkBombs(map,rows,columns);
+    char* player_1_bomb_car = "ABC";
+    char* player_2_bomb_car = "DEF";
+    char* player_3_bomb_car = "GHI";
+    char* player_4_bomb_car = "JKL";
+
+    map = checkBombs(map,rows,columns,players,player_1_bomb_car);
 
     printf("\nNew map :\n");
 
     displayMap(map,rows,columns);
 
-    printf("test");
+    map = checkBombs(map,rows,columns,players,player_2_bomb_car);
+
+    printf("\nNew map :\n");
+
+    displayMap(map,rows,columns);
+
+    map = checkBombs(map,rows,columns,players,player_3_bomb_car);
+
+    printf("\nNew map :\n");
+
+    displayMap(map,rows,columns);
+
+    map = checkBombs(map,rows,columns,players,player_4_bomb_car);
+
+    printf("\nNew map :\n");
+
+    displayMap(map,rows,columns);
+
     free(map);
 }

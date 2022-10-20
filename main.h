@@ -1,11 +1,7 @@
-typedef struct bomb{
-    int range;
-    int current_timer;
-}Bomb;
-
 typedef struct player{
     int hp;
     int max_hp;
-    Bomb* bombs;
+    int current_bombs;
     int max_bombs;
+    int range;
 }Player;
