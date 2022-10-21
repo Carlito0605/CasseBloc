@@ -1,23 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <conio.h>
-
-/** Affiche l'écran de sélection du nombre de joueurs.
- * int rang : sélection du joueur sur l'écran, un nombre entre 1 et 3 */
-void affSelectNbJoueurs(int rang) {
-    if(rang == 1) {
-        printf("* 2 Joueurs\n");
-        printf("  3 Joueurs\n");
-        printf("  4 Joueurs\n");
-    } else if(rang == 2) {
-        printf("  2 Joueurs\n");
-        printf("* 3 Joueurs\n");
-        printf("  4 Joueurs\n");
-    } else if(rang == 3) {
-        printf("  2 Joueurs\n");
-        printf("  3 Joueurs\n");
-        printf("* 4 Joueurs\n");
-    }
-}
 
 /** Affiche un menu dans la console.
  * char *titre : le titre du menu.
@@ -65,7 +48,39 @@ int changeRang(int rang) {
     return rang;
 }
 
+
+void affMaps(FILE *fichier, int nbJoueurs) {
+    while(fgetc(fichier) != '\n');
+    for(int i=1; i<=3; i++) {
+        if(nbJoueurs == i) {
+            break;
+        } else {
+            while(fgetc(fichier) != '\t');
+            while(fgetc(fichier) != '\n');
+        }
+    }
+
+    char car = fgetc(fichier);
+    while(car != EOF && car != '\t') {
+        if(car >= 48 && car <= 57) {
+            printf("Nombre de bombes par joueurs : %c\n", car);
+            while(fgetc(fichier) != '\n');
+            while(fgetc(fichier) != '\n');
+        } else {
+            printf("%c", car);
+        }
+        car = fgetc(fichier);
+    }
+}
+
+
 int main() {
+    FILE *maps = fopen("maps.txt", "r");
+    if(maps == NULL) {
+        printf("Le fichier \"maps.txt\" est introuvable.\nVeuillez verifier que ce fichier se trouve bien dans le dossier de l'executable du jeu.\n");
+        return 1;
+    }
+
     int rangTitre = 1;
     char *ssTitre[3] = {"Solo", "Demarrer un serveur", "Rejoindre un serveur"};
     menu("CASSE BLOC", ssTitre, 3, &rangTitre);
@@ -125,8 +140,8 @@ int main() {
             //Si la touche "Entrée" est pressé
             else if(input == 13) {
                 system("cls");
-                printf("Done.");
-                isOnMenuDemarrer = 0;
+                affMaps(maps, rangJoueur);
+                fclose(maps);
             }
         }
     } else if(rangTitre == 3) {
