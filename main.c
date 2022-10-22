@@ -9,7 +9,7 @@ int main() {
             .hp = 3,
             .max_hp = 3,
             .max_bombs = 2,
-            .range = 0,
+            .range = 2,
             .current_bombs = 3
     };
 
@@ -17,7 +17,7 @@ int main() {
             .hp = 3,
             .max_hp = 3,
             .max_bombs = 2,
-            .range = 2,
+            .range = 0,
             .current_bombs = 3
     };
 
