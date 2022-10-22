@@ -74,6 +74,33 @@ void affMaps(FILE *fichier, int nbJoueurs) {
 }
 
 
+void selectionJoueur(char *titre, FILE *fichier) {
+    char car = 157; //Ø
+
+
+    int input = 0;
+    int rangJoueur = 1;
+    char *ssJoueur[3] = {"2 Joueurs", "3 Joueurs", "4 Joueurs"};
+    menu(titre, ssJoueur, 3, &rangJoueur);
+    int isOnMenuDemarrer = 1;
+
+    while(isOnMenuDemarrer) {
+        input = getch();
+        //Si une flèche a été pressé
+        if(input == 224) {
+            rangJoueur = changeRang(rangJoueur);
+            menu(titre, ssJoueur, 3, &rangJoueur);
+        }
+        //Si la touche "Entrée" est pressé
+        else if(input == 13) {
+            system("cls");
+            affMaps(fichier, rangJoueur);
+            fclose(fichier);
+        }
+    }
+}
+
+
 int main() {
     FILE *maps = fopen("maps.txt", "r");
     if(maps == NULL) {
@@ -99,51 +126,13 @@ int main() {
             isOnTitleScreen = 0;
         }
     }
-    input = 0;
 
     if(rangTitre == 1) {
-        int rangJoueur = 1;
-        char *ssJoueur[3] = {"2 Joueurs", "3 Joueurs", "4 Joueurs"};
-        menu("SOLO", ssJoueur, 3, &rangJoueur);
-        int isOnMenuSolo = 1;
-
-        while(isOnMenuSolo) {
-            input = getch();
-            //Si une flèche a été pressé
-            if(input == 224) {
-                rangJoueur = changeRang(rangJoueur);
-                menu("SOLO", ssJoueur, 3, &rangJoueur);
-            }
-            //Si la touche "Entrée" est pressé
-            else if(input == 13) {
-                system("cls");
-                char car = 157; //Ø
-                printf("O %c", car);
-                isOnMenuSolo = 0;
-            }
-        }
+        selectionJoueur("SOLO", maps);
     }
     else if(rangTitre == 2) {
         int port = 8080;
-        int rangJoueur = 1;
-        char *ssJoueur[3] = {"2 Joueurs", "3 Joueurs", "4 Joueurs"};
-        menu("DEMARRER UN SERVEUR", ssJoueur, 3, &rangJoueur);
-        int isOnMenuDemarrer = 1;
-
-        while(isOnMenuDemarrer) {
-            input = getch();
-            //Si une flèche a été pressé
-            if(input == 224) {
-                rangJoueur = changeRang(rangJoueur);
-                menu("DEMARRER UN SERVEUR", ssJoueur, 3, &rangJoueur);
-            }
-            //Si la touche "Entrée" est pressé
-            else if(input == 13) {
-                system("cls");
-                affMaps(maps, rangJoueur);
-                fclose(maps);
-            }
-        }
+        selectionJoueur("DEMARRER UN SERVEUR", maps);
     } else if(rangTitre == 3) {
         system("cls");
         printf("REJOINDRE UN SERVEUR\n\n");
