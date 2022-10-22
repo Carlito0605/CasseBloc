@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <conio.h>
 
 /** Affiche un menu dans la console.
@@ -48,7 +49,7 @@ int changeRang(int rang) {
     return rang;
 }
 
-
+/*
 void affMaps(FILE *fichier, int nbJoueurs) {
     while(fgetc(fichier) != '\n');
     for(int i=1; i<=3; i++) {
@@ -72,34 +73,7 @@ void affMaps(FILE *fichier, int nbJoueurs) {
         car = fgetc(fichier);
     }
 }
-
-
-void selectionJoueur(char *titre, FILE *fichier) {
-    char car = 157; //Ø
-
-
-    int input = 0;
-    int rangJoueur = 1;
-    char *ssJoueur[3] = {"2 Joueurs", "3 Joueurs", "4 Joueurs"};
-    menu(titre, ssJoueur, 3, &rangJoueur);
-    int isOnMenuDemarrer = 1;
-
-    while(isOnMenuDemarrer) {
-        input = getch();
-        //Si une flèche a été pressé
-        if(input == 224) {
-            rangJoueur = changeRang(rangJoueur);
-            menu(titre, ssJoueur, 3, &rangJoueur);
-        }
-        //Si la touche "Entrée" est pressé
-        else if(input == 13) {
-            system("cls");
-            affMaps(fichier, rangJoueur);
-            fclose(fichier);
-        }
-    }
-}
-
+*/
 
 int main() {
     FILE *maps = fopen("maps.txt", "r");
@@ -108,36 +82,116 @@ int main() {
         return 1;
     }
 
-    int rangTitre = 1;
-    char *ssTitre[3] = {"Solo", "Demarrer un serveur", "Rejoindre un serveur"};
-    menu("CASSE BLOC", ssTitre, 3, &rangTitre);
     int input;
+    int rangTitre = 1;
+    int rangJoueur = 1;
+
     int isOnTitleScreen = 1;
+    int isOnSelectJoueur = 0;
+    int isOnSelectMaps = 0;
+    int isOnRejoindre = 0;
+    int isPlaying = 0;
 
-    while(isOnTitleScreen) {
-        input = getch();
-        //Si une flèche a été pressé
-        if(input == 224) {
-            rangTitre = changeRang(rangTitre);
-            menu("CASSE BLOC", ssTitre, 3, &rangTitre);
-        }
-        //Si la touche "Entrée" est pressé
-        else if(input == 13) {
-            isOnTitleScreen = 0;
-        }
-    }
-
-    if(rangTitre == 1) {
-        selectionJoueur("SOLO", maps);
-    }
-    else if(rangTitre == 2) {
-        int port = 8080;
-        selectionJoueur("DEMARRER UN SERVEUR", maps);
-    } else if(rangTitre == 3) {
+    while(!isPlaying) {
         system("cls");
-        printf("REJOINDRE UN SERVEUR\n\n");
+        if(isOnTitleScreen) {
+            char *ssTitre[3] = {"Solo", "Demarrer un serveur", "Rejoindre un serveur"};
+            menu("CASSE BLOC", ssTitre, 3, &rangTitre);
+
+            while(isOnTitleScreen) {
+                input = getch();
+                //Appuie sur une flèche
+                if(input == 224) {
+                    rangTitre = changeRang(rangTitre);
+                    menu("CASSE BLOC", ssTitre, 3, &rangTitre);
+                }
+                //Touche Entrée
+                else if(input == 13) {
+                    isOnTitleScreen = 0;
+                    if(rangTitre == 3) {
+                        isOnRejoindre = 1;
+                    } else {
+                        isOnSelectJoueur = 1;
+                    }
+                }
+            }
+        }
+        else if(isOnSelectJoueur) {
+            char titre[] = "DEMARRER UN SERVEUR";
+            if(rangTitre == 1) {
+                strcpy(titre, "SOLO");
+            }
+
+            input = 0;
+            char *ssJoueur[3] = {"2 Joueurs", "3 Joueurs", "4 Joueurs"};
+            menu(titre, ssJoueur, 3, &rangJoueur);
+
+            while(isOnSelectJoueur) {
+                input = getch();
+                //Appuie sur une flèche
+                if(input == 224) {
+                    rangJoueur = changeRang(rangJoueur);
+                    menu(titre, ssJoueur, 3, &rangJoueur);
+                }
+                //Touche Entrée
+                else if(input == 13) {
+                    isOnSelectJoueur = 0;
+                    isOnSelectMaps = 1;
+                }
+                //Touche Échap
+                else if(input == 27) {
+                    isOnSelectJoueur = 0;
+                    isOnTitleScreen = 1;
+                }
+            }
+        }
+        else if(isOnSelectMaps) {
+            while(fgetc(maps) != '\n');
+            for(int i=1; i<=3; i++) {
+                if(rangJoueur == i) {
+                    break;
+                } else {
+                    while(fgetc(maps) != '\t');
+                    while(fgetc(maps) != '\n');
+                }
+            }
+
+            char car = fgetc(maps);
+            while(car != EOF && car != '\t') {
+                if(car >= 48 && car <= 57) {
+                    printf("Nombre de bombes par joueurs : %c\n", car);
+                    while(fgetc(maps) != '\n');
+                    while(fgetc(maps) != '\n');
+                } else {
+                    printf("%c", car);
+                }
+                car = fgetc(maps);
+            }
+
+            while(isOnSelectMaps) {
+                input = getch();
+                //Touche Échap
+                if(input == 27) {
+                    isOnSelectMaps = 0;
+                    isOnSelectJoueur = 1;
+                }
+            }
+        }
+        else if(isOnRejoindre) {
+            printf("REJOINDRE UN SERVEUR\n");
+
+            while(isOnRejoindre) {
+                input = getch();
+                //Touche Échap
+                if(input == 27) {
+                    isOnRejoindre = 0;
+                    isOnTitleScreen = 1;
+                }
+            }
+        }
     }
 
+    fclose(maps);
     while(1);
     return 0;
 }
