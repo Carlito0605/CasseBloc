@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <conio.h>
 #include "main.h"
 #include "move.h"
 
@@ -13,15 +14,17 @@ void displayMap(char **tabltest, int rows, int columns){
     }
 }
 
-void move(char **tabltest,int rows, int columns, int xmap, int ymap, int xfuturmap, int yfuturmap){
-    if(tabltest[xfuturmap][yfuturmap]!='X'&& tabltest[xfuturmap][yfuturmap]!='M'){
+void move(char **tabltest,int rows, int columns, int *xmap, int *ymap, int xfuturmap, int yfuturmap){
+    if(tabltest[xfuturmap][yfuturmap]!='X' && tabltest[xfuturmap][yfuturmap]!='M'){
         printf("bouge en %d:%d\n",xfuturmap,yfuturmap);
-        tabltest[xmap][ymap] = ' ';
+        tabltest[*xmap][*ymap] = ' ';
         tabltest[xfuturmap][yfuturmap]='P';
+        *xmap=xfuturmap;
+        *ymap=yfuturmap;
     }else {
         printf("impossible de bouger c'est un mur\n");
+
     }
-    //verfier dans la fonction si le mouvement est possible X et M
 
 }
 
@@ -36,16 +39,49 @@ int main() {
     }
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < columns; ++j) {
-            tabltest[i][j]='0';
+            tabltest[i][j]='X';
         }
 
     }
     tabltest[xmap][ymap]='P';
     displayMap(tabltest,rows,columns);
-    move(tabltest, rows, columns, xmap, ymap,xmap-1,ymap);
-    xmap-=1;
+    //move(tabltest, rows, columns, xmap, ymap,xmap-1,ymap);
     printf("\n");
-    displayMap(tabltest,rows,columns);
+
+    while(1) {
+        int input = getch();
+
+        //Vérifie qu'une flèche a été pressé
+        if(input == 224) {
+            input = getch();
+            //Vérifie quel flèche a été pressé
+            switch(input) {
+                case 72 :
+                    printf("haut\n");
+                    move(tabltest, rows, columns, &xmap, &ymap,xmap-1,ymap);
+                    displayMap(tabltest,rows,columns);
+                    break;
+                case 80 :
+                    printf("bas\n");
+                    move(tabltest, rows, columns, &xmap, &ymap,xmap+1,ymap);
+                    displayMap(tabltest,rows,columns);
+                    break;
+                case 75 :
+                    printf("gauche\n");
+                    move(tabltest, rows, columns, &xmap, &ymap,xmap,ymap-1);
+                    displayMap(tabltest,rows,columns);
+                    break;
+                case 77 :
+                    printf("droite\n");
+                    move(tabltest, rows, columns, &xmap, &ymap,xmap,ymap+1);
+                    displayMap(tabltest,rows,columns);
+                    break;
+            }
+        }
+        input = 0;
+    }
+
+
 
     /*for(int x = 0; x< xmap;x++){
         for(int y = 0; y< ymap; y++){
