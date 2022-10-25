@@ -1,40 +1,73 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include "main.h"
+#include "move.h"
 
-typedef struct {
-    int range;
-    int current_timer;
-}Bomb;
+void displayMap(char **tabltest, int rows, int columns){
+    for (int i=0;i<rows;i++){
+        for (int j = 0; j < columns; ++j) {
+            printf("%c ",tabltest[i][j]);
+        }
+        printf("\n");
+    }
+}
 
-typedef struct
-{
-    int hp;
-    int max_hp;
-    Bomb* bombs;
-    int max_bombs;
-} Player;
+void move(char **tabltest,int rows, int columns, int xmap, int ymap, int xfuturmap, int yfuturmap){
+
+    printf("bouge en %d:%d\n",xfuturmap,yfuturmap);
+
+    tabltest[xmap][ymap] = '0';
+    tabltest[xfuturmap][yfuturmap]='1';
+
+    //verfier dans la fonction si le mouvement est possible X et M
+
+}
 
 int main() {
-    for(int x = 0; x< xmap;x++){
+    int xmap = 2;
+    int ymap = 2;
+    int rows = 5;
+    int columns = 5;
+    char ** tabltest = malloc(sizeof (char*)*rows);
+    for (int i = 0; i < rows; ++i) {
+        tabltest[i]= malloc(sizeof (char)*columns);
+    }
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < columns; ++j) {
+            tabltest[i][j]='0';
+        }
+
+    }
+    tabltest[xmap][ymap]='1';
+    displayMap(tabltest,rows,columns);
+
+
+    move(tabltest, rows, columns, xmap, ymap,xmap-1,ymap);
+    xmap+=1;
+    printf("\n");
+    displayMap(tabltest,rows,columns);
+
+    /*for(int x = 0; x< xmap;x++){
         for(int y = 0; y< ymap; y++){
-            if(haut == 1 && joeur[positionx][positiony + 1] == ' '){
-                joeur[positionx][positiony + 1];
+            if(haut == 1 && Player[positionx][positiony + 1] == ' '){
+                Player[positionx][positiony + 1];
             };
-            elseif(gauche == 1 && joeur[positionx - 1][positiony]== ' '){
-                joeur[positionx - 1][positiony];
+            elseif(gauche == 1 && Player[positionx - 1][positiony]== ' '){
+                Player[positionx - 1][positiony];
             };
 
-            elseif(droite == 1 && joeur[positionx + 1][positiony]== ' '){
-                joeur[positionx + 1][positiony];
+            elseif(droite == 1 && Player[positionx + 1][positiony]== ' '){
+                Player[positionx + 1][positiony];
             };
-            elseif(bas == 1 && joeur[positionx][positiony - 1]== ' '){
-                joeur[positionx][positiony - 1];
+            elseif(bas == 1 && Player[positionx][positiony - 1]== ' '){
+                Player[positionx][positiony - 1];
             };
-            if(dropBomb()){
-                map[x][y]='X';
+            if("appuie sur t"){
+                dropBomb();
             }
         };
-    };
+    };*/
 }
 
 
