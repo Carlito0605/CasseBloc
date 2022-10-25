@@ -14,12 +14,13 @@ void displayMap(char **tabltest, int rows, int columns){
 }
 
 void move(char **tabltest,int rows, int columns, int xmap, int ymap, int xfuturmap, int yfuturmap){
-
-    printf("bouge en %d:%d\n",xfuturmap,yfuturmap);
-
-    tabltest[xmap][ymap] = '0';
-    tabltest[xfuturmap][yfuturmap]='1';
-
+    if(tabltest[xfuturmap][yfuturmap]!='X'&& tabltest[xfuturmap][yfuturmap]!='M'){
+        printf("bouge en %d:%d\n",xfuturmap,yfuturmap);
+        tabltest[xmap][ymap] = ' ';
+        tabltest[xfuturmap][yfuturmap]='P';
+    }else {
+        printf("impossible de bouger c'est un mur\n");
+    }
     //verfier dans la fonction si le mouvement est possible X et M
 
 }
@@ -39,12 +40,10 @@ int main() {
         }
 
     }
-    tabltest[xmap][ymap]='1';
+    tabltest[xmap][ymap]='P';
     displayMap(tabltest,rows,columns);
-
-
     move(tabltest, rows, columns, xmap, ymap,xmap-1,ymap);
-    xmap+=1;
+    xmap-=1;
     printf("\n");
     displayMap(tabltest,rows,columns);
 
