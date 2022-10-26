@@ -2,98 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <conio.h>
-
-/** Affiche un menu dans la console.
- * char *titre : le titre du menu.
- * char **sstitre : un tableau de sous titre.
- * int sizeSstitre : la taille du tableau de sous titre.
- * int rang : le rang actuel de la sélection de l'utilisateur. */
-void menu(char *titre, char **sstitre, int sizeSstitre, int rang) {
-    system("cls");
-    printf("%s\n", titre);
-
-    for(int i=0; i<sizeSstitre; i++) {
-        if(i == rang) {
-            printf("*");
-        } else {
-            printf(" ");
-        }
-        printf(" %s\n", sstitre[i]);
-    }
-}
-
-/** Récupère l'appuie sur les flèche du joueur pour changer la sélection sur le menu.
- * int rangActuel : sélection du joueur sur l'écran, un nombre entre 0 et rangMax.
- * int rangMax : le nombre de sous menu. */
-void changeRang(int *rangActuel, int rangMax) {
-    int input = getch();
-    switch(input) {
-        //Flèche du haut
-        case 72 :
-            if(*rangActuel != 0) {
-                *rangActuel -= 1;
-            }
-            break;
-        //Flèche du bas
-        case 80 :
-            if(*rangActuel != rangMax-1) {
-                *rangActuel += 1;
-            }
-            break;
-    }
-}
-
-void menuMaps(FILE *fichier, long pos) {
-    fseek(fichier, pos, SEEK_SET);
-    char car = fgetc(fichier);
-    while(car != EOF && car != '\t') {
-        if(car >= 48 && car <= 57) {
-            printf("Nombre de bombes par joueurs : %c\n", car);
-            while(fgetc(fichier) != '\n');
-            while(fgetc(fichier) != '\n');
-        } else {
-            printf("%c", car);
-        }
-        car = fgetc(fichier);
-    }
-}
-
-/** Donne la position de la première map à afficher.
- * FILE *fichier : fichier sur lequel on travaille.
- * int nbJoueurs : nombre de joueurs demandé */
-long posCurseurNbJoueurs(FILE *fichier, int nbJoueurs) {
-    rewind(fichier);
-    while(fgetc(fichier) != '\n');
-    for(int i=0; i<3; i++) {
-        if(nbJoueurs != i) {
-            while(fgetc(fichier) != '\t');
-            while(fgetc(fichier) != '\n');
-        } else {
-            break;
-        }
-    }
-    return ftell(fichier);
-}
-
-int nbMaps(FILE *fichier, long pos) {
-    fseek(fichier, pos, SEEK_SET);
-    char car1 = fgetc(fichier);
-    char car2 = fgetc(fichier);
-    int cmpt = 0;
-    while(car2 != '\t' && car2 != EOF) {
-        if(car1 == '\n' && car2 == '\n') {
-            cmpt++;
-            car2 = fgetc(fichier);
-            while(car2 == '\n') {
-                car2 = fgetc(fichier);
-            }
-        } else {
-            car1 = car2;
-            car2 = fgetc(fichier);
-        }
-    }
-    return cmpt;
-}
+#include "menu.h"
 
 int main() {
     FILE *maps = fopen("maps.txt", "r");
@@ -101,11 +10,16 @@ int main() {
         printf("Le fichier \"maps.txt\" est introuvable.\nVeuillez verifier que ce fichier se trouve bien dans le dossier de l'executable du jeu.\n");
         return 1;
     }
-
+    //Variables de jeu
+    int nbBombeDepart = 0;
+    int playingMapWidth = 0;
+    int playingMapLenght = 0;
+    char **playingMap;
+    //Gestion de la sélection menu
     int input;
     int rangTitre = 0;
     int rangJoueur = 0;
-
+    //L'ecran actuellement affiché
     int isOnTitleScreen = 1;
     int isOnSelectJoueur = 0;
     int isOnSelectMaps = 0;
@@ -128,7 +42,7 @@ int main() {
                 //Touche Entrée
                 else if(input == 13) {
                     isOnTitleScreen = 0;
-                    if(rangTitre == 3) {
+                    if(rangTitre == 2) {
                         isOnRejoindre = 1;
                     } else {
                         isOnSelectJoueur = 1;
@@ -178,23 +92,27 @@ int main() {
             }
             int rangMaps = 0;
 
-            menuMaps(maps, pos);
+            menuMaps(maps, pos, rangMaps, mapsSelected);
 
             while(isOnSelectMaps) {
                 input = getch();
                 //Appuie sur une flèche
                 if(input == 224) {
                     changeRang(&rangMaps, sizeMapsSelected+1);
-                    menuMaps(maps, pos);
+                    menuMaps(maps, pos, rangMaps, mapsSelected);
                 }
                 //Touche Entrée
                 else if(input == 13) {
-                    if(rangMaps == sizeMapsSelected+1) {
-                        isOnSelectMaps = 0;
-                        isPlaying = 1;
+                    if(rangMaps == sizeMapsSelected) {
+                        if(isMapsSelected(mapsSelected, sizeMapsSelected)) {
+                            isOnSelectMaps = 0;
+                            isPlaying = 1;
+                        } else {
+                            printf("Veuillez au moins selectionner une map\n");
+                        }
                     } else {
                         mapsSelected[rangMaps] = !mapsSelected[rangMaps];
-                        menuMaps(maps, pos);
+                        menuMaps(maps, pos, rangMaps, mapsSelected);
                     }
                 }
                 //Touche Échap
