@@ -2,7 +2,6 @@ typedef struct {
     int range;
     int current_timer;
 }Bomb;
-
 typedef struct
 {
     int hp;
