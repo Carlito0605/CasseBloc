@@ -39,66 +39,107 @@ char** explosionAtThatPlace(char**map, int rows, int columns, int v_pos, int h_p
         map[v_pos][h_pos] = '.';
         dropObject();
     }
-    else if(map[v_pos][h_pos] == 'P'){ //Joueur
+    else if(map[v_pos][h_pos]>='1' && map[v_pos][h_pos]<='4'){ //Joueur
         takeDamage();
     }
 
     return map;
 }
 
-char** bombExplosion(char**map, int rows, int columns, int v_pos, int h_pos, int range){
+int checkRange(char bomb, Player * players){
+    int range = 2;
+    switch (bomb) {
+        case 'C':
+            range = players[0].range;
+            players[0].current_bombs++;
+            if(players[0].current_bombs > players[0].max_bombs) players[0].current_bombs = players[0].max_bombs;
+            break;
+        case 'F':
+            range = players[1].range;
+            players[1].current_bombs++;
+            if(players[1].current_bombs > players[1].max_bombs) players[1].current_bombs = players[1].max_bombs;
+            break;
+        case 'I':
+            range = players[2].range;
+            players[2].current_bombs++;
+            if(players[2].current_bombs > players[2].max_bombs) players[2].current_bombs = players[2].max_bombs;
+            break;
+        case 'L':
+            range = players[3].range;
+            players[3].current_bombs++;
+            if(players[3].current_bombs > players[3].max_bombs) players[3].current_bombs = players[3].max_bombs;
+            break;
+    }
+    return range;
+}
+
+char** bombExplosion(char**map, int rows, int columns, int v_pos, int h_pos, int range, Player* players){
 
     map[v_pos][h_pos] = 'X';
     int top_stop = 0;
     int bottom_stop = 0;
     int right_stop = 0;
     int left_stop = 0;
+    char wall = 'M';
+
     for(int i = 1; i<=range; i++){
         if((v_pos+i) < rows){
             if(map[v_pos+i][h_pos] != '*' && map[v_pos+i][h_pos] != 'X' && map[v_pos+i][h_pos] != '.'){
-                if(map[v_pos+i][h_pos] == 'M') top_stop = 1;
-                else if(top_stop != 1 && (map[v_pos+i][h_pos] == 'N' || map[v_pos+i][h_pos] == 'P')){
-                    map = explosionAtThatPlace(map,rows,columns,v_pos+i,h_pos);
-                }
-                else{
-                    map = bombExplosion(map,rows,columns,v_pos+i,h_pos,2);
-                    map[v_pos+i][h_pos] = 'X';
+                if(map[v_pos+i][h_pos] == wall) top_stop = 1;
+                else if(top_stop == 0){
+                    if(map[v_pos+i][h_pos] == 'N' || (map[v_pos+i][h_pos]>='1' && map[v_pos+i][h_pos]<='4')){
+                        map = explosionAtThatPlace(map,rows,columns,v_pos+i,h_pos);
+                    }
+                    else{
+                        int new_range = checkRange(map[v_pos+i][h_pos],players);
+                        map = bombExplosion(map,rows,columns,v_pos+i,h_pos,new_range,players);
+                        map[v_pos+i][h_pos] = 'X';
+                    }
                 }
             }
         }
         if((v_pos-i) >= 0){
             if(map[v_pos-i][h_pos] != '*' && map[v_pos-i][h_pos] != 'X' && map[v_pos-i][h_pos] != '.'){
-                if(map[v_pos-i][h_pos] == 'M') top_stop = 1;
-                else if(top_stop != 1 && (map[v_pos-i][h_pos] == 'N' || map[v_pos-i][h_pos] == 'P')){
-                    map = explosionAtThatPlace(map,rows,columns,v_pos-i,h_pos);
-                }
-                else{
-                    map = bombExplosion(map,rows,columns,v_pos-i,h_pos,2);
-                    map[v_pos-i][h_pos] = 'X';
+                if(map[v_pos-i][h_pos] == wall) bottom_stop = 1;
+                else if(bottom_stop == 0){
+                    if(map[v_pos-i][h_pos] == 'N' || (map[v_pos-i][h_pos]>='1' && map[v_pos-i][h_pos]<='4')){
+                        map = explosionAtThatPlace(map,rows,columns,v_pos-i,h_pos);
+                    }
+                    else{
+                        int new_range = checkRange(map[v_pos-i][h_pos],players);
+                        map = bombExplosion(map,rows,columns,v_pos-i,h_pos,new_range,players);
+                        map[v_pos-i][h_pos] = 'X';
+                    }
                 }
             }
         }
         if((h_pos+i) < columns){
             if(map[v_pos][h_pos+i] != '*' && map[v_pos][h_pos+i] != 'X' && map[v_pos][h_pos+i] != '.'){
-                if(map[v_pos][h_pos+i] == 'M') top_stop = 1;
-                else if(top_stop != 1 && (map[v_pos][h_pos+i] == 'N' || map[v_pos][h_pos+i] == 'P')){
-                    map = explosionAtThatPlace(map,rows,columns,v_pos,h_pos+i);
-                }
-                else{
-                    map = bombExplosion(map,rows,columns,v_pos,h_pos+i,2);
-                    map[v_pos][h_pos+i] = 'X';
+                if(map[v_pos][h_pos+i] == wall) right_stop = 1;
+                else if(right_stop == 0){
+                    if(map[v_pos][h_pos+i] == 'N' || (map[v_pos][h_pos+i]>='1' && map[v_pos][h_pos+i]<='4')){
+                        map = explosionAtThatPlace(map,rows,columns,v_pos,h_pos+i);
+                    }
+                    else{
+                        int new_range = checkRange(map[v_pos][h_pos+i],players);
+                        map = bombExplosion(map,rows,columns,v_pos,h_pos+i,new_range,players);
+                        map[v_pos][h_pos+i] = 'X';
+                    }
                 }
             }
         }
         if((h_pos-i) >= 0){
             if(map[v_pos][h_pos-i] != '*' && map[v_pos][h_pos-i] != 'X' && map[v_pos][h_pos-i] != '.'){
-                if(map[v_pos][h_pos-i] == 'M') top_stop = 1;
-                else if(top_stop != 1 && (map[v_pos][h_pos-i] == 'N' || map[v_pos][h_pos-i] == 'P')){
-                    map = explosionAtThatPlace(map,rows,columns,v_pos,h_pos-i);
-                }
-                else{
-                    map = bombExplosion(map,rows,columns,v_pos,h_pos-i,2);
-                    map[v_pos][h_pos-i] = 'X';
+                if(map[v_pos][h_pos-i] == wall) left_stop = 1;
+                else if(left_stop == 0){
+                    if(map[v_pos][h_pos-i] == 'N' || (map[v_pos][h_pos-i]>='1' && map[v_pos][h_pos-i]<='4')){
+                        map = explosionAtThatPlace(map,rows,columns,v_pos,h_pos-i);
+                    }
+                    else{
+                        int new_range = checkRange(map[v_pos][h_pos-i],players);
+                        map = bombExplosion(map,rows,columns,v_pos,h_pos-i,new_range,players);
+                        map[v_pos][h_pos-i] = 'X';
+                    }
                 }
             }
         }
@@ -120,6 +161,7 @@ char** checkBombs(char**map, int rows, int columns, Player* players, char* bomb_
             else if(map[i][y] == bomb_car[2]){
                 //map[i][y] = 'X';
                 int range = 2;
+                /*
                 switch (bomb_car[2]) {
                     case 'C':
                         range = players[0].range;
@@ -142,7 +184,9 @@ char** checkBombs(char**map, int rows, int columns, Player* players, char* bomb_
                         if(players[3].current_bombs > players[3].max_bombs) players[3].current_bombs = players[3].max_bombs;
                         break;
                 }
-                map = bombExplosion(map,rows,columns,i,y,range);
+                */
+                range = checkRange(bomb_car[2],players);
+                map = bombExplosion(map,rows,columns,i,y,range,players);
             }
         }
     }
@@ -189,17 +233,23 @@ void test(int rows, int columns, Player* players){
 
 
     map[3][5] = 'C';
-    //map[2][6] = 'F';
+    map[6][10] = 'L';
     //map[0][12] = 'I';
     //map[9][2] = 'L';
 
     //------
 
     map[4][5] = 'N'; //Mur destructible
-    map[5][5] = 'P'; //Joueur
-    map[2][5] = 'P'; //Joueur
-    map[3][4] = 'P'; //Joueur
+    map[5][5] = '1'; //Joueur
+    map[2][5] = '2'; //Joueur
+    map[3][4] = '3'; //Joueur
     map[3][6] = 'N'; //Mur destructible
+    map[6][11] = 'M'; //Mur
+    map[6][12] = 'N'; //Mur destructible
+    map[6][7] = 'M'; //Mur
+    map[6][8] = 'N'; //Mur destructible
+    map[6][6] = 'N'; //Mur destructible
+    map[6][5] = 'N'; //Mur destructible
 
     displayMap(map,rows,columns);
 

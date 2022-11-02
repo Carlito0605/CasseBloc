@@ -2,8 +2,13 @@
 #include <stdlib.h>
 #include "bombs.h"
 
+///Ceci est le code de gestion des bombes
+///Le code du menu et du mouvement du joueur est presque terminé on a juste pas réussi à merge
+
 int main() {
     //printf("Hello, World!\n"); //affiche
+
+
 
     Player player_1 = {
             .hp = 3,
@@ -33,7 +38,7 @@ int main() {
             .hp = 3,
             .max_hp = 3,
             .max_bombs = 2,
-            .range = 3,
+            .range = 5,
             .current_bombs = 3
     };
 
