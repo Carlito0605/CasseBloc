@@ -43,6 +43,54 @@ void changeRang(int *rangActuel, int rangMax) {
     }
 }
 
+/** Affiche le bon caractère à l'écran pour le caractère donné.
+ * char car : le caractère à transformer. */
+void affCharMap(char car) {
+    //Murs
+    if(car == 'm') {
+        printf("%c", 177);
+    } else if(car == 'x') {
+        printf("%c", 219);
+    }
+        //Joueurs
+    else if(car == 'p') {
+        printf("%c", 6);
+    } else if(car == '1') {
+        printf("%c", 6);
+    } else if(car == '2') {
+        printf("%c", 3);
+    } else if(car == '3') {
+        printf("%c", 5);
+    } else if(car == '4') {
+        printf("%c", 4);
+    }
+        //Bombes
+    else if(car=='A' || car=='D' || car=='G' || car=='J') {
+        printf("%c", 207);
+    } else if(car=='B' || car=='E' || car=='H' || car=='K') {
+        printf("%c", 15);
+    } else if(car=='C' || car=='F' || car=='I' || car=='L') {
+        printf("%c", 64);
+    }
+        //Autres
+    else {
+        printf("%c", car);
+    }
+}
+
+/** Affiche la carte du jeu à l'écran avec les bon caractères.
+ * char **tab : le tableau de caractère du jeu.
+ * int tabWidth : la largeur du tableau.
+ * int tabHeight : la hauteur du tableau. */
+void affTabMap(char **tab, int tabWidth, int tabHeight) {
+    for(int i=0; i<tabHeight; i++) {
+        for(int j=0; j<tabWidth; j++) {
+            affCharMap(tab[i][j]);
+        }
+        printf("\n");
+    }
+}
+
 /** Affiche un menu de sélection des maps selon le nombre de joueurs sélectionnés.
  * FILE *fichier : fichier de maps.
  * long pos : la position du curseur pour le nombre de joueurs donnés.
@@ -73,7 +121,7 @@ void menuMaps(FILE *fichier, long pos, int rang, int *tabSelection) {
             while(fgetc(fichier) != '\n');
             cmpt++;
         } else {
-            printf("%c", car);
+            affCharMap(car);
         }
         car = fgetc(fichier);
     }
