@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <conio.h>
+#include <time.h>
 
 /** Affiche un menu dans la console.
  * char *titre : le titre du menu.
@@ -174,14 +175,22 @@ int nbMaps(FILE *fichier, long pos) {
     return cmpt;
 }
 
-/** Vérifie qu'au moins une map est sélectionné lors du début de la partie.
+/** Compte le nombre de map sélectionné. Fonctionne aussi comme un booléen.
  * int *tab : le tableau de booléen.
  * int sizeTab : la taille du tableau. */
-int isMapsSelected(int *tab, int sizeTab) {
+int countMapsSelected(int *tab, int sizeTab) {
+    int cmpt = 0;
     for(int i=0; i<sizeTab; i++) {
         if(tab[i]) {
-            return 1;
+            cmpt += 1;
         }
     }
-    return 0;
+    return cmpt;
+}
+
+/** Initialise le jeu */
+void initGame(int *tab, int sizeTab) {
+    srand(time(NULL));
+    int nbMaps = countMapsSelected(tab, sizeTab);
+    int randMap = (rand() % (nbMaps+1));
 }

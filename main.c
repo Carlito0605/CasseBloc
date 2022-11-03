@@ -104,7 +104,7 @@ int main() {
                 //Touche Entrée
                 else if(input == 13) {
                     if(rangMaps == sizeMapsSelected) {
-                        if(isMapsSelected(mapsSelected, sizeMapsSelected)) {
+                        if(countMapsSelected(mapsSelected, sizeMapsSelected)) {
                             isOnSelectMaps = 0;
                             isPlaying = 1;
                         } else {
