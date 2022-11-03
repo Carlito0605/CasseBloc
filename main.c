@@ -21,7 +21,7 @@ int main() {
     Player player_2 = {
             .hp = 3,
             .max_hp = 3,
-            .max_bombs = 2,
+            .max_bombs = 3,
             .range = 0,
             .current_bombs = 3
     };
@@ -29,7 +29,7 @@ int main() {
     Player player_3 = {
             .hp = 3,
             .max_hp = 3,
-            .max_bombs = 2,
+            .max_bombs = 3,
             .range = 1,
             .current_bombs = 3
     };
@@ -37,7 +37,7 @@ int main() {
     Player player_4 = {
             .hp = 3,
             .max_hp = 3,
-            .max_bombs = 2,
+            .max_bombs = 3,
             .range = 5,
             .current_bombs = 3
     };
