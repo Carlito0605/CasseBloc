@@ -1,3 +1,0 @@
-C:/Users/jorda/OneDrive/Documents/GitHub/cassebloc/CasseBloc/cmake-build-debug/CMakeFiles/CasseBloc.dir
-C:/Users/jorda/OneDrive/Documents/GitHub/cassebloc/CasseBloc/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/jorda/OneDrive/Documents/GitHub/cassebloc/CasseBloc/cmake-build-debug/CMakeFiles/rebuild_cache.dir
