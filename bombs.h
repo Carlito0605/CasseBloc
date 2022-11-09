@@ -35,8 +35,41 @@ void displayPlayersStats(Player * players,int players_size){
     }
 }
 
-void dropObject(){
+int findPlayerWithBomb(char bomb){
+
+    switch(bomb){
+        case 'C':
+            return 0;
+            break;
+        case 'F':
+            return 1;
+            break;
+        case 'I':
+            return 2;
+            break;
+        case 'L':
+            return 3;
+            break;
+    }
+
+    return -1;
+}
+
+void dropObject(char bomb, Player * players){
     printf("\n#dropObject()\n");
+    int max = 100;
+    int min = 0;
+
+    //printf("La bombe qui explose le mur est la bombe '%c'\n",bomb);
+    int player = -1;
+
+    player = findPlayerWithBomb(bomb);
+
+    if(player != -1){
+        printf("La bombe qui explose le mur est la bombe du joueur %d !\n",player+1);
+        int random = rand() % max + min;
+        printf("Random -> %d\n",random);
+    }
 }
 
 void takeDamage(char player_number,Player * players){
@@ -57,11 +90,11 @@ void takeDamage(char player_number,Player * players){
     }
 }
 
-char** explosionAtThatPlace(char**map, int rows, int columns, int v_pos, int h_pos, Player* players){
+char** explosionAtThatPlace(char**map, int rows, int columns, int v_pos, int h_pos, Player* players,char bomb){
 
     if(map[v_pos][h_pos] == 'n'){ //Mur destructible
         map[v_pos][h_pos] = 'x';
-        dropObject();
+        dropObject(bomb,players);
     }
     else if(map[v_pos][h_pos]>='1' && map[v_pos][h_pos]<='4'){ //Joueur
         takeDamage(map[v_pos][h_pos],players);
@@ -72,28 +105,16 @@ char** explosionAtThatPlace(char**map, int rows, int columns, int v_pos, int h_p
 
 int checkRange(char bomb, Player * players){
     int range = 2;
-    switch (bomb) {
-        case 'C':
-            range = players[0].range;
-            players[0].current_bombs++;
-            if(players[0].current_bombs > players[0].max_bombs) players[0].current_bombs = players[0].max_bombs;
-            break;
-        case 'F':
-            range = players[1].range;
-            players[1].current_bombs++;
-            if(players[1].current_bombs > players[1].max_bombs) players[1].current_bombs = players[1].max_bombs;
-            break;
-        case 'I':
-            range = players[2].range;
-            players[2].current_bombs++;
-            if(players[2].current_bombs > players[2].max_bombs) players[2].current_bombs = players[2].max_bombs;
-            break;
-        case 'L':
-            range = players[3].range;
-            players[3].current_bombs++;
-            if(players[3].current_bombs > players[3].max_bombs) players[3].current_bombs = players[3].max_bombs;
-            break;
+    int player = -1;
+
+    player = findPlayerWithBomb(bomb);
+
+    if(player != -1){
+        range = players[player].range;
+        players[player].current_bombs++;
+        if(players[player].current_bombs > players[player].max_bombs) players[player].current_bombs = players[player].max_bombs;
     }
+
     return range;
 }
 
@@ -112,7 +133,7 @@ char** bombExplosion(char**map, int rows, int columns, int v_pos, int h_pos, int
                 if(map[v_pos+i][h_pos] == wall) top_stop = 1;
                 else if(top_stop == 0){
                     if(map[v_pos+i][h_pos] == 'n' || (map[v_pos+i][h_pos]>='1' && map[v_pos+i][h_pos]<='4')){
-                        map = explosionAtThatPlace(map,rows,columns,v_pos+i,h_pos,players);
+                        map = explosionAtThatPlace(map,rows,columns,v_pos+i,h_pos,players,map[v_pos][h_pos]);
                     }
                     else{
                         int new_range = checkRange(map[v_pos+i][h_pos],players);
@@ -127,7 +148,7 @@ char** bombExplosion(char**map, int rows, int columns, int v_pos, int h_pos, int
                 if(map[v_pos-i][h_pos] == wall) bottom_stop = 1;
                 else if(bottom_stop == 0){
                     if(map[v_pos-i][h_pos] == 'n' || (map[v_pos-i][h_pos]>='1' && map[v_pos-i][h_pos]<='4')){
-                        map = explosionAtThatPlace(map,rows,columns,v_pos-i,h_pos,players);
+                        map = explosionAtThatPlace(map,rows,columns,v_pos-i,h_pos,players,map[v_pos][h_pos]);
                     }
                     else{
                         int new_range = checkRange(map[v_pos-i][h_pos],players);
@@ -142,7 +163,7 @@ char** bombExplosion(char**map, int rows, int columns, int v_pos, int h_pos, int
                 if(map[v_pos][h_pos+i] == wall) right_stop = 1;
                 else if(right_stop == 0){
                     if(map[v_pos][h_pos+i] == 'n' || (map[v_pos][h_pos+i]>='1' && map[v_pos][h_pos+i]<='4')){
-                        map = explosionAtThatPlace(map,rows,columns,v_pos,h_pos+i,players);
+                        map = explosionAtThatPlace(map,rows,columns,v_pos,h_pos+i,players,map[v_pos][h_pos]);
                     }
                     else{
                         int new_range = checkRange(map[v_pos][h_pos+i],players);
@@ -157,7 +178,7 @@ char** bombExplosion(char**map, int rows, int columns, int v_pos, int h_pos, int
                 if(map[v_pos][h_pos-i] == wall) left_stop = 1;
                 else if(left_stop == 0){
                     if(map[v_pos][h_pos-i] == 'n' || (map[v_pos][h_pos-i]>='1' && map[v_pos][h_pos-i]<='4')){
-                        map = explosionAtThatPlace(map,rows,columns,v_pos,h_pos-i,players);
+                        map = explosionAtThatPlace(map,rows,columns,v_pos,h_pos-i,players,map[v_pos][h_pos]);
                     }
                     else{
                         int new_range = checkRange(map[v_pos][h_pos-i],players);

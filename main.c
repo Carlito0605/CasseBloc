@@ -1,14 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "bombs.h"
 
-///Ceci est le code de gestion des bombes
-///Le code du menu et du mouvement du joueur est presque terminé on a juste pas réussi à merge
-
 int main() {
+
     //printf("Hello, World!\n"); //affiche
 
-
+    srand(time(NULL));
 
     Player player_1 = {
             .hp = 3,
