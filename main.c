@@ -1,45 +1,174 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "bombs.h"
+#include <string.h>
+#include <conio.h>
+#include "menu.h"
+#include <time.h>
 
 int main() {
-    //printf("Hello, World!\n"); //affiche
+    srand(time(NULL));
 
-    Player player_1 = {
-            .hp = 3,
-            .max_hp = 3,
-            .max_bombs = 2,
-            .range = 2,
-            .current_bombs = 3
-    };
+    FILE *maps = fopen("maps.txt", "r");
+    if(maps == NULL) {
+        printf("Le fichier \"maps.txt\" est introuvable.\nVeuillez verifier que ce fichier se trouve bien dans le dossier de l'executable du jeu.\n");
+        return 1;
+    }
+    //Variables de jeu
+    int nbBombeDepart = 0;
+    int playingMapWidth = 0;
+    int playingMapHeight = 0;
+    char **playingMap;
+    long pos = 0;
+    int *mapsSelected;
+    int sizeMapsSelected = 0;
+    /*
+    //Gestion de la sélection menu
+    int input;
+    int rangTitre = 0;
+    int rangJoueur = 0;
+    //L'ecran actuellement affiché
+    int isOnTitleScreen = 1;
+    int isOnSelectJoueur = 0;
+    int isOnSelectMaps = 0;
+    int isOnRejoindre = 0;
+    int isPlaying = 0;
 
-    Player player_2 = {
-            .hp = 3,
-            .max_hp = 3,
-            .max_bombs = 2,
-            .range = 0,
-            .current_bombs = 3
-    };
+    while(!isPlaying) {
+        system("cls");
+        if(isOnTitleScreen) {
+            char *ssTitre[3] = {"Solo", "Demarrer un serveur", "Rejoindre un serveur"};
+            menu("CASSE BLOC", ssTitre, 3, rangTitre);
 
-    Player player_3 = {
-            .hp = 3,
-            .max_hp = 3,
-            .max_bombs = 2,
-            .range = 1,
-            .current_bombs = 3
-    };
+            while(isOnTitleScreen) {
+                input = getch();
+                //Appuie sur une flèche
+                if(input == 224) {
+                    changeRang(&rangTitre, 3);
+                    menu("CASSE BLOC", ssTitre, 3, rangTitre);
+                }
+                //Touche Entrée
+                else if(input == 13) {
+                    isOnTitleScreen = 0;
+                    if(rangTitre == 2) {
+                        isOnRejoindre = 1;
+                    } else {
+                        isOnSelectJoueur = 1;
+                    }
+                }
+                //Touche Échap
+                else if(input == 27) {
+                    return 0;
+                }
+            }
+        }
+        else if(isOnSelectJoueur) {
+            char titre[] = "DEMARRER UN SERVEUR";
+            if(rangTitre == 0) {
+                strcpy(titre, "SOLO");
+            }
 
-    Player player_4 = {
-            .hp = 3,
-            .max_hp = 3,
-            .max_bombs = 2,
-            .range = 3,
-            .current_bombs = 3
-    };
+            input = 0;
+            char *ssJoueur[3] = {"2 Joueurs", "3 Joueurs", "4 Joueurs"};
+            menu(titre, ssJoueur, 3, rangJoueur);
 
-    Player players[4] = {player_1, player_2, player_3, player_4};
+            while(isOnSelectJoueur) {
+                input = getch();
+                //Appuie sur une flèche
+                if(input == 224) {
+                    changeRang(&rangJoueur, 3);
+                    menu(titre, ssJoueur, 3, rangJoueur);
+                }
+                //Touche Entrée
+                else if(input == 13) {
+                    isOnSelectJoueur = 0;
+                    isOnSelectMaps = 1;
+                }
+                //Touche Échap
+                else if(input == 27) {
+                    isOnSelectJoueur = 0;
+                    isOnTitleScreen = 1;
+                }
+            }
+        }
+        else if(isOnSelectMaps) {
+            pos = posCurseurNbJoueurs(maps, rangJoueur);
+            sizeMapsSelected = nbMaps(maps, pos);
+            mapsSelected = malloc(sizeof(int) * sizeMapsSelected);
+            for(int i=0; i<sizeMapsSelected; i++) {
+                mapsSelected[i] = 1;
+            }
+            int rangMaps = 0;
 
-    test(10,15, players);
+            menuMaps(maps, pos, rangMaps, mapsSelected);
 
+            while(isOnSelectMaps) {
+                input = getch();
+                //Appuie sur une flèche
+                if(input == 224) {
+                    changeRang(&rangMaps, sizeMapsSelected+1);
+                    menuMaps(maps, pos, rangMaps, mapsSelected);
+                }
+                //Touche Entrée
+                else if(input == 13) {
+                    if(rangMaps == sizeMapsSelected) {
+                        if(countMapsSelected(mapsSelected, sizeMapsSelected)) {
+                            isOnSelectMaps = 0;
+                            isPlaying = 1;
+                            //initGame(&nbBombeDepart, &playingMapWidth, &playingMapHeight, playingMap, maps, pos, mapsSelected, sizeMapsSelected);
+                        } else {
+                            printf("Veuillez au moins selectionner une map\n");
+                        }
+                    } else {
+                        mapsSelected[rangMaps] = !mapsSelected[rangMaps];
+                        menuMaps(maps, pos, rangMaps, mapsSelected);
+                    }
+                }
+                //Touche Échap
+                else if(input == 27) {
+                    isOnSelectMaps = 0;
+                    isOnSelectJoueur = 1;
+                }
+            }
+        }
+        else if(isOnRejoindre) {
+            printf("REJOINDRE UN SERVEUR\n");
+
+            while(isOnRejoindre) {
+                input = getch();
+                //Touche Échap
+                if(input == 27) {
+                    isOnRejoindre = 0;
+                    isOnTitleScreen = 1;
+                }
+            }
+        }
+    }
+
+    system("cls");
+    printf("Le jeu commence!\n\n");
+    */
+
+    pos = posCurseurNbJoueurs(maps, 0);
+    sizeMapsSelected = 0;
+    mapsSelected = malloc(sizeof(int) * sizeMapsSelected);
+    for(int i=0; i<sizeMapsSelected; i++) {
+        mapsSelected[i] = 1;
+    }
+    int isPlaying = 1;
+
+    playingMap = initGame(&nbBombeDepart, &playingMapWidth, &playingMapHeight, maps, pos, mapsSelected, sizeMapsSelected);
+    printf("nbBombeDepart=%d; playingMapWidth=%d; playingMapHeight=%d;\nplayingMap=\n", nbBombeDepart, playingMapWidth, playingMapHeight);
+
+    for(int i=0; i<playingMapHeight; i++) {
+       for(int j=0; j<playingMapWidth; j++) {
+           printf("%c", playingMap[i][j]);
+       }
+       printf("\n");
+    }
+
+
+
+
+    fclose(maps);
     return 0;
 }
