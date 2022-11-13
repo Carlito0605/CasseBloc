@@ -8,7 +8,7 @@
 int main() {
     srand(time(NULL));
 
-    FILE *maps = fopen("maps.txt", "r");
+    FILE *maps = fopen("../maps.txt", "r");
     if(maps == NULL) {
         printf("Le fichier \"maps.txt\" est introuvable.\nVeuillez verifier que ce fichier se trouve bien dans le dossier de l'executable du jeu.\n");
         return 1;

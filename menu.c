@@ -254,12 +254,5 @@ char** initGame(int *nbBombeDepart, int *playingMapWidth, int *playingMapHeight,
         }
     }
 
-    for(int i=0; i<(*playingMapHeight); i++) {
-        for(int j=0; j<(*playingMapWidth); j++) {
-            printf("%c", playingMap[i][j]);
-        }
-        printf("\n");
-    }
-
     return playingMap;
 }
