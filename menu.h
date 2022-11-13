@@ -4,6 +4,7 @@ void affCharMap(char car);
 void affTabMap(char **tab, int tabWidth, int tabHeight);
 void menuMaps(FILE *fichier, long pos, int rang, int *tabSelection);
 long posCurseurNbJoueurs(FILE *fichier, int nbJoueurs);
-int nbMaps(FILE *fichier, long pos);
+int nbMaps(FILE *fichier, long pos, int limit);
 int countMapsSelected(int *tab, int sizeTab);
+int readNumber(FILE *fichier);
 char** initGame(int *nbBombeDepart, int *playingMapWidth, int *playingMapHeight, FILE *fichier, long pos, int *tab, int sizeTab);

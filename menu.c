@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <conio.h>
-//#include <time.h>
 
 /** Affiche un menu dans la console.
  * char *titre : le titre du menu.
@@ -9,10 +8,13 @@
  * int sizeSstitre : la taille du tableau de sous titre.
  * int rang : le rang actuel de la sélection de l'utilisateur. */
 void menu(char *titre, char **sstitre, int sizeSstitre, int rang) {
+    //Efface l'écran et affiche le titre du menu
     system("cls");
     printf("%s\n", titre);
 
+    //Affiche les sous-titres
     for(int i=0; i<sizeSstitre; i++) {
+        //Si le sous-titre actuel est sélectionné, affiche le caractère "*"
         if(i == rang) {
             printf("*");
         } else {
@@ -30,12 +32,14 @@ void changeRang(int *rangActuel, int rangMax) {
     switch(input) {
         //Flèche du haut
         case 72 :
+            //Gère le cas où la sélection est déjà tout en haut
             if(*rangActuel != 0) {
                 *rangActuel -= 1;
             }
             break;
-            //Flèche du bas
+        //Flèche du bas
         case 80 :
+            //Gère le cas où la sélection est déjà tout en bas
             if(*rangActuel != rangMax-1) {
                 *rangActuel += 1;
             }
@@ -52,7 +56,7 @@ void affCharMap(char car) {
     } else if(car == 'x') {
         printf("%c", 219);
     }
-        //Joueurs
+    //Joueurs
     else if(car == 'p') {
         printf("%c", 6);
     } else if(car == '1') {
@@ -64,7 +68,7 @@ void affCharMap(char car) {
     } else if(car == '4') {
         printf("%c", 4);
     }
-        //Bombes
+    //Bombes
     else if(car=='A' || car=='D' || car=='G' || car=='J') {
         printf("%c", 207);
     } else if(car=='B' || car=='E' || car=='H' || car=='K') {
@@ -72,7 +76,7 @@ void affCharMap(char car) {
     } else if(car=='C' || car=='F' || car=='I' || car=='L') {
         printf("%c", 64);
     }
-        //Autres
+    //Autres caractères
     else {
         printf("%c", car);
     }
@@ -83,8 +87,10 @@ void affCharMap(char car) {
  * int tabWidth : la largeur du tableau.
  * int tabHeight : la hauteur du tableau. */
 void affTabMap(char **tab, int tabWidth, int tabHeight) {
+    //Pour tout les caractère de la maps
     for(int i=0; i<tabHeight; i++) {
         for(int j=0; j<tabWidth; j++) {
+            //Affiche le bon caractère à l'écran
             affCharMap(tab[i][j]);
         }
         printf("\n");
@@ -97,35 +103,47 @@ void affTabMap(char **tab, int tabWidth, int tabHeight) {
  * int rang : le rang actuel de la sélection du joueur.
  * int *tabSelection : le tableau indiquant quels maps sont sélectionnés (1 si oui, 0 si non). */
 void menuMaps(FILE *fichier, long pos, int rang, int *tabSelection) {
+    //Efface l'écran et positionne le curseur au bon endroit dans le fichier
     system("cls");
     fseek(fichier, pos, SEEK_SET);
-    char car = fgetc(fichier);
-    char coche = 157;
-    int cmpt = 0;
+
+    char car = fgetc(fichier); //Caractère actuel dans le fichier
+    char coche = 157; //caractère "Ø"
+    int cmpt = 0; //Compteur du nombre de maps rencontré dans la boucle
+
+    //Tant que l'on est pas arrivé à la fin du fichier ou à la section suivante
     while(car != EOF && car != '\t') {
+        //Si le caractère est un nombre
         if(car >= 48 && car <= 57) {
+            //Si le curseur est sur la map actuelle, affiche un "*"
             if(rang == cmpt) {
                 printf("*");
             } else {
                 printf(" ");
             }
 
+            //Si la map est sélectionné, affiche "Ø" sinon "O"
             if(tabSelection[cmpt] == 1) {
                 printf("%c", coche);
             } else {
                 printf("O");
             }
 
+            //Affiche le nombre de bombe par joueur puis lis 2 lignes entières pour passer à l'affichage de la map
             printf(" Nombre de bombes par joueurs : %c\n", car);
             while(fgetc(fichier) != '\n');
             while(fgetc(fichier) != '\n');
+            //Incrémente le compteur de maps rencontrés
             cmpt++;
-        } else {
+        }
+        //Si le caractère n'est pas un nombre, l'affiche à l'écran avec la bonne syntaxe
+        else {
             affCharMap(car);
         }
         car = fgetc(fichier);
     }
 
+    //Si le curseur est sur "Commencer la partie", on affiche "*"
     if(rang == cmpt) {
         printf("*");
     } else {
@@ -138,38 +156,56 @@ void menuMaps(FILE *fichier, long pos, int rang, int *tabSelection) {
  * FILE *fichier : fichier de maps.
  * int nbJoueurs : nombre de joueurs -1 */
 long posCurseurNbJoueurs(FILE *fichier, int nbJoueurs) {
+    //Revient au début du fichier et lit la première ligne
     rewind(fichier);
     while(fgetc(fichier) != '\n');
+    //Pour tout les nombres de joueurs
     for(int i=0; i<3; i++) {
+        //Si l'on est pas dans la bonne section, on lit jusqu'à la prochaine section et on lit la ligne
         if(nbJoueurs != i) {
             while(fgetc(fichier) != '\t');
             while(fgetc(fichier) != '\n');
-        } else {
-            break;
+        }
+        //Sinon on retourne la position du curseur
+        else {
+            return ftell(fichier);
         }
     }
-    return ftell(fichier);
 }
 
 /** Compte le nombre de maps pour le nombre de joueurs sélectionné.
  * FILE *fichier : fichier contenant les maps.
- * long pos : la position du curseur pour le nombre de joueurs donnés*/
-int nbMaps(FILE *fichier, long pos) {
+ * long pos : la position du curseur pour le nombre de joueurs donnés.
+ * int limit : donne une limite à la lecture du fichier, -1 pour tout lire*/
+int nbMaps(FILE *fichier, long pos, int limit) {
+    //Positionne le curseur au bon endroit dans le fichier
     fseek(fichier, pos, SEEK_SET);
-    char car1 = fgetc(fichier);
-    char car2 = fgetc(fichier);
-    int cmpt = 0;
-    while(car2 != '\t' && car2 != EOF) {
+
+    char car1 = fgetc(fichier); //Caractère précédent
+    char car2 = fgetc(fichier); //Caractère actuel
+    int cmpt = 0; //compteur de maps
+
+    //Tant que l'on est pas arrivé à la fin du fichier ou à la section suivante ou a la limite
+    while(car2 != EOF && car2 != '\t' && cmpt!=limit) {
+        //Si il y a eu 2 sauts de lignes d'affilé, c'est qu'on est passé à la map suivante
         if(car1 == '\n' && car2 == '\n') {
             cmpt++;
+            //Lis le fichier tant qu'ils y a des sauts de lignes
             car2 = fgetc(fichier);
             while(car2 == '\n') {
                 car2 = fgetc(fichier);
             }
-        } else {
+        }
+        //Sinon on passe au caractère suivant
+        else {
             car1 = car2;
             car2 = fgetc(fichier);
         }
+    }
+
+    //Si la limite a été atteinte, revient aux caractères précédent afin de les lire plus tard
+    if(cmpt == limit) {
+        fseek(fichier, -3, SEEK_CUR);
     }
     return cmpt;
 }
@@ -187,6 +223,29 @@ int countMapsSelected(int *tab, int sizeTab) {
     return cmpt;
 }
 
+/** Lis le prochain nombre depuis le curseur actuel du fichier.
+ * FILE *fichier : le fichier à lire. */
+int readNumber(FILE *fichier) {
+    int number = 0;
+    char car;
+    //Lis les caractères jusqu'à tomber sur un nombre
+    do {
+        car = fgetc(fichier);
+    } while((car<48 || car>57) && car!=EOF);
+
+    //Transforme le caractère en nombre
+    number = car-48;
+    //Lis la suite des caractères et si ce sont des nombres, les ajoute à "number"
+    car = fgetc(fichier);
+    while(car>=48 && car<=57) {
+        number *= 10;
+        number += car-48;
+        car = fgetc(fichier);
+    }
+
+    return number;
+}
+
 /** Initialise le jeu et retourne un tableau de chaine de caractère représentant la map de jeu.
  * int *nbBombeDepart : le nombre de bombe au début du jeu.
  * int *playingMapWidth : la largeur de la map.
@@ -196,55 +255,28 @@ int countMapsSelected(int *tab, int sizeTab) {
  * int *tab : le tableau de booléen indiquant les maps sélectionnés.
  * int sizeTab : la taille du tableau tab.*/
 char** initGame(int *nbBombeDepart, int *playingMapWidth, int *playingMapHeight, FILE *fichier, long pos, int *tab, int sizeTab) {
-    fseek(fichier, pos, SEEK_SET);
-    int nbMaps = countMapsSelected(tab, sizeTab);
-    int randMap = (rand() % (nbMaps+1));
+    //Choisi un nombre aléatoire parmis les maps sélectionnés
+    int randMap;
+    do {
+        randMap = rand() % (sizeTab+1);
+    } while(!tab[randMap]);
+    printf("randMap=%d\n", randMap);
 
-    int mapActuelle = 0;
-    char car = fgetc(fichier);
+    //Lis le fichier jusqu'à tomber sur la map choisi aléatoirement
+    nbMaps(fichier, pos, randMap);
 
-    while(mapActuelle!=randMap && car!=EOF && car!='\t') {
-        //Tant que le caractère n'est pas un nombre
-        while(car<48 || car>57) {
-            fgets("", 1000, fichier);
-            car = fgetc(fichier);
-        }
+    //Lis les nombres afin d'initialiser les données du jeu
+    *nbBombeDepart = readNumber(fichier);
+    *playingMapWidth = readNumber(fichier);
+    *playingMapHeight = readNumber(fichier);
 
-        mapActuelle++;
-        if(mapActuelle!=randMap) {
-            fgets("", 1000, fichier);
-            fgets("", 1000, fichier);
-        }
-    }
-
-    *nbBombeDepart = car-48;
-    car = fgetc(fichier);
-    while(car<48 || car>57) {
-        car = fgetc(fichier);
-    }
-
-    *playingMapWidth = car-48;
-    car = fgetc(fichier);
-    while(car != ' ') {
-        *playingMapWidth *= 10;
-        *playingMapWidth += car-48;
-        car = fgetc(fichier);
-    }
-
-    *playingMapHeight = fgetc(fichier) -48;
-    car = fgetc(fichier);
-    while(car != '\n') {
-        *playingMapHeight *= 10;
-        *playingMapHeight += car-48;
-        car = fgetc(fichier);
-    }
-
+    //Alloue de la mémoire pour la map et entre les caractères dedans
+    char car;
     char **playingMap = malloc(sizeof(char*) * (*playingMapHeight));
     for(int i=0 ; i<(*playingMapHeight); i++) {
         playingMap[i] = malloc(sizeof(char) * ((*playingMapWidth) + 1));
 
         car = fgetc(fichier);
-        int j=0;
         for(int j=0; j<(*playingMapWidth); j++) {
             playingMap[i][j] = car;
             car = fgetc(fichier);
@@ -252,13 +284,6 @@ char** initGame(int *nbBombeDepart, int *playingMapWidth, int *playingMapHeight,
         while(car != '\n') {
             car = fgetc(fichier);
         }
-    }
-
-    for(int i=0; i<(*playingMapHeight); i++) {
-        for(int j=0; j<(*playingMapWidth); j++) {
-            printf("%c", playingMap[i][j]);
-        }
-        printf("\n");
     }
 
     return playingMap;

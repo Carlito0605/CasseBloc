@@ -1,0 +1,150 @@
+	2 JOUEURS :
+1
+9 5
+xxxxxxxxx
+xp mmmmmx
+x xmxmx x
+xmmmmm px
+xxxxxxxxx
+
+2
+15 7
+xxxxxxxxxxxxxxx
+xmxmmm p mmmxmx
+xmmmxmm mmxmmmx
+ mxmxmxxxmxmxm 
+xmmmxmm mmxmmmx
+xmxmmm p mmmxmx
+xxxxxxxxxxxxxxx
+
+1
+15 11
+xxxxxxxxxxxxxxx
+x  mxxxmxxxm  x
+x xmmmxmxmmmx x
+x  mxmmmmmxm  x
+x xmmmxmxmmmx x
+xp mxxxmxxxm px
+x xmmmxmxmmmx x
+x  mxmmmmmxm  x
+x xmmmxmxmmmx x
+x  mxxxmxxxm  x
+xxxxxxxxxxxxxxx
+
+1
+15 6
+xxxxxxxxxxxxxxx
+xp mmmmmmmmmxmx
+x mmmmmmmmmmmmx
+xmmmmmmmmmmmm x
+xmxmmmmmmmmm px
+xxxxxxxxxxxxxxx
+
+
+	3 JOUEURS :
+1
+15 9
+xxxxxxxxxxxxxxx
+xp mmmmxmmmm px
+x xmxmxxxmxmx x
+xmmmmmmmmmmmmmx
+xmxmxmx xmxmxmx
+xmmmmm p mmmmmx
+xxxxxxxxxxxxxxx
+
+1
+15 11
+xxxxxxxxxxxxxxx
+xmxmmm p mmmxmx
+xmmmxmm mmxmmmx
+ mxmxmxxxmxmxm 
+xmmmxmm mmxmmmx
+xmxmmm p mmmxmx
+xmmmxmm mmxmmmx
+ mxmxmxxxmxmxm 
+xmmmxmm mmxmmmx
+xmxmmm p mmmxmx
+xxxxxxxxxxxxxxx
+
+2
+39 7
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+mmmmxm   mxmmmmmxm   mxmmmmmxm   mxmmmm
+xmxmmmx xmmmxmxmmmx xmmmxmxmmmx xmmmxmx
+xmxxxm p mxxxmxxxm p mxxxmxxxm p mxxxmx
+xmxmmmx xmmmxmxmmmx xmmmxmxmmmx xmmmxmx
+mmmmxm   mxmmmmmxm   mxmmmmmxm   mxmmmm
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+1
+17 7
+xxxxxxxxxxxxxxxxx
+xp mmmmmmmmmmm px
+x mmmmmmmmmmmmm x
+xmmmmmmmxmmmmmmmx
+xmmmmmmx xmmmmmmx
+xmmmmmm p mmmmmmx
+xxxxxxxxxxxxxxxxx
+
+
+	4 JOUEURS :
+1
+13 13
+xxxxxxxxxxxxx
+xp mmmmmmm px
+x xmxmxmxmx x
+xmmmmmmmmmmmx
+xmxmxmxmxmxmx
+xmmmmmmmmmmmx
+xmxmxmxmxmxmx
+xmmmmmmmmmmmx
+xmxmxmxmxmxmx
+xmmmmmmmmmmmx
+x xmxmxmxmx x
+xp mmmmmmm px
+xxxxxxxxxxxxx
+
+1
+15 15
+xxxxxxxxxxxxxxx
+xmxmmm p mmmxmx
+xmmmxmm mmxmmmx
+ mxmxmxxxmxmxm 
+xmmmxmm mmxmmmx
+xmxmmm p mmmxmx
+xmmmxmm mmxmmmx
+ mxmxmxxxmxmxm 
+xmmmxmm mmxmmmx
+xmxmmm p mmmxmx
+xmmmxmm mmxmmmx
+ mxmxmxxxmxmxm 
+xmmmxmm mmxmmmx
+xmxmmm p mmmxmx
+xxxxxxxxxxxxxxx
+
+2
+51 7
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+mmmmxm   mxmmmmmxm   mxmmmmmxm   mxmmmmmxm   mxmmmm
+xmxmmmx xmmmxmxmmmx xmmmxmxmmmx xmmmxmxmmmx xmmmxmx
+xmxxxm p mxxxmxxxm p mxxxmxxxm p mxxxmxxxm p mxxxmx
+xmxmmmx xmmmxmxmmmx xmmmxmxmmmx xmmmxmxmmmx xmmmxmx
+mmmmxm   mxmmmmmxm   mxmmmmmxm   mxmmmmmxm   mxmmmm
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+1
+13 13
+xxxxxxxxxxxxx
+xp mmmmmmm px
+x mmmmmmmmm x
+xmmmmmmmmmmmx
+xmmmmmmmmmmmx
+xmmmmxmxmmmmx
+xmmmmmmmmmmmx
+xmmmmxmxmmmmx
+xmmmmmmmmmmmx
+xmmmmmmmmmmmx
+x mmmmmmmmm x
+xp mmmmmmm px
+xxxxxxxxxxxxx
+
