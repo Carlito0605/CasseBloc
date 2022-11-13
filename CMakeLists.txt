@@ -1,6 +1,0 @@
-cmake_minimum_required(VERSION 3.23)
-project(CasseBloc C)
-
-set(CMAKE_C_STANDARD 99)
-
-add_executable(CasseBloc main.c menu.h menu.c)

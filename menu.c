@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <conio.h>
-#include <time.h>
+//#include <time.h>
 
 /** Affiche un menu dans la console.
  * char *titre : le titre du menu.
@@ -137,7 +136,7 @@ void menuMaps(FILE *fichier, long pos, int rang, int *tabSelection) {
 
 /** Donne la position de la première map à afficher.
  * FILE *fichier : fichier de maps.
- * int nbJoueurs : nombre de joueurs demandé */
+ * int nbJoueurs : nombre de joueurs -1 */
 long posCurseurNbJoueurs(FILE *fichier, int nbJoueurs) {
     rewind(fichier);
     while(fgetc(fichier) != '\n');
@@ -188,9 +187,79 @@ int countMapsSelected(int *tab, int sizeTab) {
     return cmpt;
 }
 
-/** Initialise le jeu */
-void initGame(int *tab, int sizeTab) {
-    srand(time(NULL));
+/** Initialise le jeu et retourne un tableau de chaine de caractère représentant la map de jeu.
+ * int *nbBombeDepart : le nombre de bombe au début du jeu.
+ * int *playingMapWidth : la largeur de la map.
+ * int *playingMapHeight : la hauteur de la map.
+ * FILE *fichier : le fichier contenant les maps du jeu.
+ * long pos : la position du curseur pour le nombre de joueurs donnés.
+ * int *tab : le tableau de booléen indiquant les maps sélectionnés.
+ * int sizeTab : la taille du tableau tab.*/
+char** initGame(int *nbBombeDepart, int *playingMapWidth, int *playingMapHeight, FILE *fichier, long pos, int *tab, int sizeTab) {
+    fseek(fichier, pos, SEEK_SET);
     int nbMaps = countMapsSelected(tab, sizeTab);
     int randMap = (rand() % (nbMaps+1));
+
+    int mapActuelle = 0;
+    char car = fgetc(fichier);
+
+    while(mapActuelle!=randMap && car!=EOF && car!='\t') {
+        //Tant que le caractère n'est pas un nombre
+        while(car<48 || car>57) {
+            fgets("", 1000, fichier);
+            car = fgetc(fichier);
+        }
+
+        mapActuelle++;
+        if(mapActuelle!=randMap) {
+            fgets("", 1000, fichier);
+            fgets("", 1000, fichier);
+        }
+    }
+
+    *nbBombeDepart = car-48;
+    car = fgetc(fichier);
+    while(car<48 || car>57) {
+        car = fgetc(fichier);
+    }
+
+    *playingMapWidth = car-48;
+    car = fgetc(fichier);
+    while(car != ' ') {
+        *playingMapWidth *= 10;
+        *playingMapWidth += car-48;
+        car = fgetc(fichier);
+    }
+
+    *playingMapHeight = fgetc(fichier) -48;
+    car = fgetc(fichier);
+    while(car != '\n') {
+        *playingMapHeight *= 10;
+        *playingMapHeight += car-48;
+        car = fgetc(fichier);
+    }
+
+    char **playingMap = malloc(sizeof(char*) * (*playingMapHeight));
+    for(int i=0 ; i<(*playingMapHeight); i++) {
+        playingMap[i] = malloc(sizeof(char) * ((*playingMapWidth) + 1));
+
+        car = fgetc(fichier);
+        int j=0;
+        for(int j=0; j<(*playingMapWidth); j++) {
+            playingMap[i][j] = car;
+            car = fgetc(fichier);
+        }
+        while(car != '\n') {
+            car = fgetc(fichier);
+        }
+    }
+
+    for(int i=0; i<(*playingMapHeight); i++) {
+        for(int j=0; j<(*playingMapWidth); j++) {
+            printf("%c", playingMap[i][j]);
+        }
+        printf("\n");
+    }
+
+    return playingMap;
 }

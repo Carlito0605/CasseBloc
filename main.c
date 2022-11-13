@@ -3,8 +3,11 @@
 #include <string.h>
 #include <conio.h>
 #include "menu.h"
+#include <time.h>
 
 int main() {
+    srand(time(NULL));
+
     FILE *maps = fopen("maps.txt", "r");
     if(maps == NULL) {
         printf("Le fichier \"maps.txt\" est introuvable.\nVeuillez verifier que ce fichier se trouve bien dans le dossier de l'executable du jeu.\n");
@@ -13,8 +16,12 @@ int main() {
     //Variables de jeu
     int nbBombeDepart = 0;
     int playingMapWidth = 0;
-    int playingMapLenght = 0;
+    int playingMapHeight = 0;
     char **playingMap;
+    long pos = 0;
+    int *mapsSelected;
+    int sizeMapsSelected = 0;
+    /*
     //Gestion de la sélection menu
     int input;
     int rangTitre = 0;
@@ -84,9 +91,9 @@ int main() {
             }
         }
         else if(isOnSelectMaps) {
-            long pos = posCurseurNbJoueurs(maps, rangJoueur);
-            int sizeMapsSelected = nbMaps(maps, pos);
-            int mapsSelected[sizeMapsSelected];
+            pos = posCurseurNbJoueurs(maps, rangJoueur);
+            sizeMapsSelected = nbMaps(maps, pos);
+            mapsSelected = malloc(sizeof(int) * sizeMapsSelected);
             for(int i=0; i<sizeMapsSelected; i++) {
                 mapsSelected[i] = 1;
             }
@@ -107,6 +114,7 @@ int main() {
                         if(countMapsSelected(mapsSelected, sizeMapsSelected)) {
                             isOnSelectMaps = 0;
                             isPlaying = 1;
+                            //initGame(&nbBombeDepart, &playingMapWidth, &playingMapHeight, playingMap, maps, pos, mapsSelected, sizeMapsSelected);
                         } else {
                             printf("Veuillez au moins selectionner une map\n");
                         }
@@ -137,9 +145,30 @@ int main() {
     }
 
     system("cls");
-    printf("Le jeu commence!\n");
+    printf("Le jeu commence!\n\n");
+    */
+
+    pos = posCurseurNbJoueurs(maps, 0);
+    sizeMapsSelected = 0;
+    mapsSelected = malloc(sizeof(int) * sizeMapsSelected);
+    for(int i=0; i<sizeMapsSelected; i++) {
+        mapsSelected[i] = 1;
+    }
+    int isPlaying = 1;
+
+    playingMap = initGame(&nbBombeDepart, &playingMapWidth, &playingMapHeight, maps, pos, mapsSelected, sizeMapsSelected);
+    printf("nbBombeDepart=%d; playingMapWidth=%d; playingMapHeight=%d;\nplayingMap=\n", nbBombeDepart, playingMapWidth, playingMapHeight);
+
+    for(int i=0; i<playingMapHeight; i++) {
+       for(int j=0; j<playingMapWidth; j++) {
+           printf("%c", playingMap[i][j]);
+       }
+       printf("\n");
+    }
+
+
+
 
     fclose(maps);
-    while(1);
     return 0;
 }
