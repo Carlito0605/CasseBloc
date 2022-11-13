@@ -31,7 +31,12 @@ void displayPlayersStats(Player * players,int players_size){
         printf("* Player %d *\n",i+1);
         printf("hp : %d\n",players[i].hp);
         printf("range : %d\n",players[i].range);
-        printf("current_bombs : %d\n\n",players[i].current_bombs);
+        printf("current_bombs : %d\n",players[i].current_bombs);
+        printf("max_bombs : %d\n",players[i].max_bombs);
+        printf("max_hp : %d\n",players[i].max_hp);
+        printf("bomb_special_power_up : %d\n",players[i].bomb_special_power_up);
+        printf("invicibility : %d\n",players[i].invicibility);
+        printf("heart : %d\n\n",players[i].heart);
     }
 }
 
@@ -68,7 +73,59 @@ void dropObject(char bomb, Player * players){
     if(player != -1){
         printf("La bombe qui explose le mur est la bombe du joueur %d !\n",player+1);
         int random = rand() % max + min;
-        printf("Random -> %d\n",random);
+        int dice = rand() % 3;
+        dice = 0;
+        if(dice == 0){
+            printf("Random -> %d\n",random);
+            if(random <= 20){
+                printf("**Bomb up**\n");
+                players[player].max_bombs++;
+                players[player].current_bombs++;
+            }
+            if(random > 20 && random <= 40){
+                printf("**Bomb down**\n");
+                if(players[player].max_bombs >= 2){
+                    players[player].current_bombs--;
+                    players[player].max_bombs--;
+                }
+                else printf("! Le joueur ne peut pas avoir moins de bombes !\n");
+            }
+            if(random > 40 && random <= 60){
+                printf("**Flamme Jaune**\n");
+                players[player].range++;
+            }
+            if(random > 60 && random <= 80){
+                printf("**Flamme Bleu**\n");
+                if(players[player].range >= 2) players[player].range--;
+                else printf("! La range ne peut pas être plus baissée !\n");
+            }
+            if(random > 80 && random <= 82){
+                printf("**Flamme Rouge**\n");
+                players[player].range+=100000000;
+            }
+            if(random > 82 && random <= 87){
+                printf("**Passe bombes**\n");
+                players[player].bomb_special_power_up=0;
+            }
+            if(random > 87 && random <= 92){
+                printf("**Bomb kick**\n");
+                players[player].bomb_special_power_up=1;
+            }
+            if(random > 92 && random <= 95){
+                printf("**Invicibilité**\n");
+                players[player].invicibility=2;
+            }
+            if(random > 95 && random <= 97){
+                printf("**Coeur**\n");
+                players[player].heart=1;
+            }
+            if(random > 97 && random <= 100){
+                printf("**Vie**\n");
+                players[player].max_hp++;
+                players[player].hp++;
+            }
+            //displayPlayersStats(players,4);
+        }
     }
 }
 
@@ -94,6 +151,10 @@ char** explosionAtThatPlace(char**map, int rows, int columns, int v_pos, int h_p
 
     if(map[v_pos][h_pos] == 'n'){ //Mur destructible
         map[v_pos][h_pos] = 'x';
+        dropObject(bomb,players);
+        dropObject(bomb,players);
+        dropObject(bomb,players);
+        dropObject(bomb,players);
         dropObject(bomb,players);
     }
     else if(map[v_pos][h_pos]>='1' && map[v_pos][h_pos]<='4'){ //Joueur
