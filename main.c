@@ -21,7 +21,10 @@ int main() {
             .invincibility = 0, //isn't invincible yet
             .bomb_special_power_up = -1, //don't have any special power up
             .heart=0, //didn't get a heart this game
-            .bombs_car="ABC"
+            .bombs_car="ABC",
+            .dead = 0,
+            .v_pos = 0,
+            .h_pos = 0
     };
 
     Player player_2 = {
@@ -33,7 +36,10 @@ int main() {
             .invincibility = 0, //isn't invincible yet
             .bomb_special_power_up = -1, //don't have any special power up
             .heart=0, //didn't get a heart this game
-            .bombs_car="DEF"
+            .bombs_car="DEF",
+            .dead = 0,
+            .v_pos = 3,
+            .h_pos = 7
     };
 
     Player player_3 = {
@@ -45,7 +51,10 @@ int main() {
             .invincibility = 0, //isn't invincible yet
             .bomb_special_power_up = -1, //don't have any special power up
             .heart=0, //didn't get a heart this game
-            .bombs_car="GHI"
+            .bombs_car="GHI",
+            .dead = 0,
+            .v_pos = 5,
+            .h_pos = 5
     };
 
     Player player_4 = {
@@ -57,7 +66,10 @@ int main() {
             .invincibility = 0, //isn't invincible yet
             .bomb_special_power_up = -1, //don't have any special power up
             .heart=0, //didn't get a heart this game
-            .bombs_car="JKL"
+            .bombs_car="JKL",
+            .dead = 0,
+            .v_pos = 2,
+            .h_pos = 2
     };
 
     Player players[4] = {player_1, player_2, player_3, player_4};

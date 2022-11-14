@@ -186,7 +186,7 @@ void dropObject(char bomb, Player * players){
 
 void takeDamage(char player_number,Player * players){
 
-    /// This function deal damage to a player hit by a bomb
+    /// This function deals damage to a player hit by a bomb
 
     int player_id = -1;
     //printf("\n** DEBUG ** -> #takeDamage()\n");
@@ -208,17 +208,17 @@ void takeDamage(char player_number,Player * players){
     if(player_id != -1){
         if(players[player_id].invincibility == 0){ //Check if the player is invincible
             players[player_id].hp--;
-            printf("- Le joueur *%d* prends 1 dégats ! Il lui reste %d PV !\n",player_id+1,players[player_id].hp);
+            printf("- Le joueur *%d* prends 1 degats ! Il lui reste %d PV !\n",player_id+1,players[player_id].hp);
         }
         else printf("- Le joueur *%d* est INVINCIBLE pendant encore %d tour(s), "
-                    "il ne prend donc pas de dégats !\n",player_id+1,players[player_id].invincibility);
+                    "il ne prend donc pas de degats !\n",player_id+1,players[player_id].invincibility);
     }
     else printf("** DEBUG ** -> Il y a un problème dans la fonction 'takeDamage' player_id = -1\n");
 }
 
 char** explosionAtThatPlace(char**map, int rows, int columns, int v_pos, int h_pos, Player* players,char bomb){
 
-    /// This function check what it explose (Destructible wall, Player, else...)
+    /// This function checks what it explose (Destructible wall, Player, else...)
     /// 'bomb' is the caracter of the bomb that explosed
 
     if(map[v_pos][h_pos] == 'm'){ //Destroyable wall
@@ -236,7 +236,7 @@ char** explosionAtThatPlace(char**map, int rows, int columns, int v_pos, int h_p
 
 int checkRange(char bomb, Player * players){
 
-    /// This function check the range of a bomb explosion
+    /// This function checks the range of a bomb explosion
     /// 'bomb' is the caracter of the bomb that explosed
     /// This function also return the bomb for the player when explosed
 
@@ -258,7 +258,7 @@ int checkRange(char bomb, Player * players){
 
 char** bombExplosion(char**map, int rows, int columns, int v_pos, int h_pos, int range, Player* players){
 
-    /// This function explode the area of the bomb explosion
+    /// This function explodes the area of the bomb explosion
     /// If there is an other bomb it launch the function again
     /// If there is a desctructible wall it launch dropObject()
     /// If there is a player it launch takeDamage()
@@ -336,7 +336,7 @@ char** bombExplosion(char**map, int rows, int columns, int v_pos, int h_pos, int
 
 char** checkBombsOfOnePlayer(char**map, int rows, int columns, Player* players, char* bomb_car){
 
-    /// This function check the state of every bombs of one player and then go to the next :
+    /// This function checks the state of every bombs of one player and then goes to the next :
     /// A,D,G,J = Fresh bomb
     /// B,E,H,K = Middle time bomb
     /// C,F,I,L = Will explode next turn !
@@ -361,7 +361,7 @@ char** checkBombsOfOnePlayer(char**map, int rows, int columns, Player* players, 
 
 char** checkAllBombs(char**map, int rows, int columns, Player* players){
 
-    ///This function check the bombs of all the players by using checkBombsOfOnePlayer()
+    ///This function checks the bombs of all the players by using checkBombsOfOnePlayer()
 
     map = checkBombsOfOnePlayer(map,rows,columns,players,players[0].bombs_car);
     map = checkBombsOfOnePlayer(map,rows,columns,players,players[1].bombs_car);
@@ -373,7 +373,7 @@ char** checkAllBombs(char**map, int rows, int columns, Player* players){
 
 char** dropBomb(char**map, int v_pos, int h_pos, Player* player, char* bomb_car){
 
-    /// This function is drop a bomb of a player at a demanded position
+    /// This function drop a bomb of a player at a demanded position
 
     if(map[v_pos][h_pos] == ' '){
         if(player->current_bombs > 0){
@@ -385,6 +385,27 @@ char** dropBomb(char**map, int v_pos, int h_pos, Player* player, char* bomb_car)
     }
     else printf("Vous ne pouvez pas placer de bombe ici car : %c \n",map[v_pos][h_pos]);
 
+    return map;
+}
+
+char** playersDeath(char** map, Player * players, int players_size){
+
+    /// This function checks if a player is dead and delete is player symbol on the map
+    /// It revives him if he have a "heart"
+
+    for(int i = 0; i<players_size; i++){
+        if(players[i].hp <= 0 && players[i].dead != 1){
+            if(players[i].heart != 1){
+                players[i].dead = 1;
+                map[players[i].v_pos][players[i].h_pos] = ' ';
+                printf("- Le joueur *%d* n'a plus de PV ! Il est donc elimine !!!\n",i+1);
+            }
+            else{
+                players[i].heart = -1;
+                printf("- Le joueur *%d* a survecu a des degats mortels grace au coeur <3 ! (Le coeur ne peut plus etre utilise)\n",i+1);
+            }
+        }
+    }
     return map;
 }
 
@@ -437,13 +458,26 @@ void test(int rows, int columns, Player* players){
     displayMapDEBUG(map,rows,columns);
     displayPlayersStats(players,4);
 
+     */
+
+    map[3][5] = 'C';
+    map[3][9] = 'C';
+    map[1][7] = 'C';
+    map[players[1].v_pos][players[1].h_pos] = '2';
+
+    displayMapDEBUG(map,rows,columns);
+
     map = checkAllBombs(map,rows,columns,players);
 
     printf("\nNew map :\n");
 
+    map = playersDeath(map,players, 4);
+
     displayMapDEBUG(map,rows,columns);
 
     displayPlayersStats(players,4);
+
+    /*
 
     map = dropBomb(map,5,7,&players[0],players[0].bombs_car);
 
@@ -456,9 +490,11 @@ void test(int rows, int columns, Player* players){
 
     displayMapDEBUG(map,rows,columns);
 
-    */
+
 
     displayMap(map,rows,columns);
+
+     */
 
     free(map);
 }
