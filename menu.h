@@ -1,10 +1,4 @@
 void menu(char *titre, char **sstitre, int sizeSstitre, int rang);
 void changeRang(int *rangActuel, int rangMax);
-void affCharMap(char car);
-void affTabMap(char **tab, int tabWidth, int tabHeight);
 void menuMaps(FILE *fichier, long pos, int rang, int *tabSelection);
-long posCurseurNbJoueurs(FILE *fichier, int nbJoueurs);
-int nbMaps(FILE *fichier, long pos, int limit);
-int countMapsSelected(int *tab, int sizeTab);
-int readNumber(FILE *fichier);
-char** initGame(int *nbBombeDepart, int *playingMapWidth, int *playingMapHeight, int *mapPrecedente, FILE *fichier, long pos, int *tab, int sizeTab);
+int menuPrincipal(int *rangJoueur, long *pos, FILE *maps, int **mapsSelected, int *sizeMapsSelected);
