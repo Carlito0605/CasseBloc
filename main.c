@@ -20,6 +20,7 @@ int main() {
     int playingMapWidth = 0;
     int playingMapHeight = 0;
     char **playingMap;
+    int mapPrecedente = -1;
     long pos = 0;
     int *mapsSelected;
     int sizeMapsSelected = 0;
@@ -168,24 +169,28 @@ int main() {
 
     //TEST
 
-    pos = posCurseurNbJoueurs(maps, 0);
-    sizeMapsSelected = 3;
+    pos = posCurseurNbJoueurs(maps, 2);
+    sizeMapsSelected = 4;
     mapsSelected = malloc(sizeof(int) * sizeMapsSelected);
     for(int i=0; i<sizeMapsSelected; i++) {
         mapsSelected[i] = 1;
     }
+
     int isPlaying = 1;
+    int input = 0;
 
-    playingMap = initGame(&nbBombeDepart, &playingMapWidth, &playingMapHeight, maps, pos, mapsSelected, sizeMapsSelected);
-    printf("nbBombeDepart=%d; playingMapWidth=%d; playingMapHeight=%d;\nplayingMap=\n", nbBombeDepart, playingMapWidth, playingMapHeight);
+    while(isPlaying) {
+        playingMap = initGame(&nbBombeDepart, &playingMapWidth, &playingMapHeight, &mapPrecedente, maps, pos, mapsSelected, sizeMapsSelected);
+        printf("nbBombeDepart=%d; playingMapWidth=%d; playingMapHeight=%d;\nplayingMap=\n", nbBombeDepart, playingMapWidth, playingMapHeight);
+        affTabMap(playingMap, playingMapWidth, playingMapHeight);
 
-    for(int i=0; i<playingMapHeight; i++) {
-       for(int j=0; j<playingMapWidth; j++) {
-           printf("%c", playingMap[i][j]);
-       }
-       printf("\n");
+        input = getch();
+        if(input == 27) {
+            isPlaying = 0;
+        }
+
+        free(playingMap);
     }
-
     fclose(maps);
     return 0;
 }

@@ -154,7 +154,7 @@ void menuMaps(FILE *fichier, long pos, int rang, int *tabSelection) {
 
 /** Donne la position de la première map à afficher.
  * FILE *fichier : fichier de maps.
- * int nbJoueurs : nombre de joueurs -1 */
+ * int nbJoueurs : nombre de joueurs -2 */
 long posCurseurNbJoueurs(FILE *fichier, int nbJoueurs) {
     //Revient au début du fichier et lit la première ligne
     rewind(fichier);
@@ -246,21 +246,25 @@ int readNumber(FILE *fichier) {
     return number;
 }
 
-/** Initialise le jeu et retourne un tableau de chaine de caractère représentant la map de jeu.
+/** Initialise le jeu et retourne un tableau de chaine de caractère représentant la map de jeu (dont le pointeur a été free).
  * int *nbBombeDepart : le nombre de bombe au début du jeu.
  * int *playingMapWidth : la largeur de la map.
  * int *playingMapHeight : la hauteur de la map.
+ * int *mapPrecedente : numéro de la map précédemment joué, -1 si début de partie.
  * FILE *fichier : le fichier contenant les maps du jeu.
  * long pos : la position du curseur pour le nombre de joueurs donnés.
  * int *tab : le tableau de booléen indiquant les maps sélectionnés.
  * int sizeTab : la taille du tableau tab.*/
-char** initGame(int *nbBombeDepart, int *playingMapWidth, int *playingMapHeight, FILE *fichier, long pos, int *tab, int sizeTab) {
+char** initGame(int *nbBombeDepart, int *playingMapWidth, int *playingMapHeight, int *mapPrecedente, FILE *fichier, long pos, int *tab, int sizeTab) {
     //Choisi un nombre aléatoire parmis les maps sélectionnés
     int randMap;
     do {
-        randMap = rand() % (sizeTab+1);
-    } while(!tab[randMap]);
-    printf("randMap=%d\n", randMap);
+        randMap = rand() % sizeTab;
+    } while(!tab[randMap] || randMap==(*mapPrecedente));
+
+    if(countMapsSelected(tab, sizeTab) != 1) {
+        *mapPrecedente = randMap;
+    }
 
     //Lis le fichier jusqu'à tomber sur la map choisi aléatoirement
     nbMaps(fichier, pos, randMap);
