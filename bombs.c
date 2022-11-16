@@ -455,9 +455,9 @@ char** bombKick(char** map,int rows, int columns,char direction,int bomb_v_pos,i
         }
     }
     else if(direction == 'T' || direction == 'B'){
-        if(checkIfOutOfTheMap(map,rows, columns,bomb_v_pos+increment,bomb_h_pos) && map[limit][bomb_h_pos] == ' ') bomb_v_pos = limit;
+        if(checkIfOutOfTheMap(rows, columns,bomb_v_pos+increment,bomb_h_pos) && map[limit][bomb_h_pos] == ' ') bomb_v_pos = limit;
         while(map[bomb_v_pos+increment][bomb_h_pos] == ' '){
-            if(checkIfOutOfTheMap(map,rows, columns,bomb_v_pos+increment,bomb_h_pos) && map[limit][bomb_h_pos] == ' ') bomb_v_pos = limit;
+            if(checkIfOutOfTheMap(rows, columns,bomb_v_pos+increment,bomb_h_pos) && map[limit][bomb_h_pos] == ' ') bomb_v_pos = limit;
             else bomb_v_pos+=increment;
         }
     }
