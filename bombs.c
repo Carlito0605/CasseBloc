@@ -409,6 +409,64 @@ char** playersDeath(char** map, Player * players, int players_size){
     return map;
 }
 
+int checkIfOutOfTheMap(int rows, int columns,int v_pos,int h_pos){
+
+    /// This function check if a bomb is out of the map and return 1 if yes 0 if no.
+
+    //printf("\n ** DEBUG ** -> bomb_h_pos+increment=%d et columns=%d\n",h_pos,columns);
+    if(v_pos <= 0 || v_pos >= rows-1) return 1;
+    if(h_pos <= 0 || h_pos >= columns-1) return 1;
+
+    return 0;
+}
+
+char** bombKick(char** map,int rows, int columns,char direction,int bomb_v_pos,int bomb_h_pos){
+
+    /// This function move a bomb in a specified direction until it hit something using the bombs coordinates
+    /// R -> Right
+    /// L -> Left
+    /// T -> Top
+    /// B -> Bottom
+
+    char temp_bomb_car = map[bomb_v_pos][bomb_h_pos];
+    map[bomb_v_pos][bomb_h_pos] = ' ';
+
+    int increment = 0;
+    int limit = 0;
+
+    if(direction == 'R' || direction == 'B'){
+        increment = 1;
+        limit = 0;
+    }
+    else if(direction == 'L'){
+        increment = -1;
+        limit = columns-1;
+    }
+    else if(direction == 'T'){
+        increment = -1;
+        limit = rows-1;
+    }
+
+    if(direction == 'R' || direction == 'L'){
+        if(checkIfOutOfTheMap(rows, columns,bomb_v_pos,bomb_h_pos+increment) && map[bomb_v_pos][limit] == ' ') bomb_h_pos = limit;
+        while(map[bomb_v_pos][bomb_h_pos+increment] == ' '){
+            if(checkIfOutOfTheMap(rows, columns,bomb_v_pos,bomb_h_pos+increment) && map[bomb_v_pos][limit] == ' ') bomb_h_pos = limit;
+            else bomb_h_pos+=increment;
+        }
+    }
+    else if(direction == 'T' || direction == 'B'){
+        if(checkIfOutOfTheMap(map,rows, columns,bomb_v_pos+increment,bomb_h_pos) && map[limit][bomb_h_pos] == ' ') bomb_v_pos = limit;
+        while(map[bomb_v_pos+increment][bomb_h_pos] == ' '){
+            if(checkIfOutOfTheMap(map,rows, columns,bomb_v_pos+increment,bomb_h_pos) && map[limit][bomb_h_pos] == ' ') bomb_v_pos = limit;
+            else bomb_v_pos+=increment;
+        }
+    }
+
+    map[bomb_v_pos][bomb_h_pos] = temp_bomb_car;
+
+    return map;
+}
+
 void test(int rows, int columns, Player* players){
 
     ///Function to test that bombs are working
@@ -459,6 +517,17 @@ void test(int rows, int columns, Player* players){
     displayPlayersStats(players,4);
 
      */
+
+    map[3][3] = 'L';
+    map[5][7] = '1';
+    map[9][7] = 'x';
+    map[7][3] = 'm';
+    map[3][11] = 'm';
+    map[3][0] = 'm';
+    displayMapDEBUG(map,rows,columns);
+    map = bombKick(map,rows,columns,'T',3,3);
+
+    
 
     map[3][5] = 'C';
     map[3][9] = 'C';

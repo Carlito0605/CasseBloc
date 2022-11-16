@@ -30,4 +30,6 @@ char** checkBombsOfOnePlayer(char**map, int rows, int columns, Player* players, 
 char** checkAllBombs(char**map, int rows, int columns, Player* players);
 char** dropBomb(char**map, int v_pos, int h_pos, Player* player, char* bomb_car);
 char** playersDeath(char** map, Player * players, int players_size);
+int checkIfOutOfTheMap(int rows, int columns,int v_pos,int h_pos);
+char** bombKick(char** map,int rows, int columns,char direction,int bomb_v_pos,int bomb_h_pos);
 void test(int rows, int columns, Player* players);
