@@ -4,7 +4,6 @@
 #include <conio.h>
 #include "bombs.h"
 #include "time.h"
-#include <time.h>
 #include "menu.h"
 #include "map.h"
 
@@ -12,7 +11,7 @@ void findPlayerOnTheMap(char** map, int rows, int columns, int player_id, Player
 
     int player_car = 'X';
 
-    switch(player_id){
+    switch(player_id) {
         case 0 :
             player_car = '1';
             break;
@@ -25,23 +24,7 @@ void findPlayerOnTheMap(char** map, int rows, int columns, int player_id, Player
         case 3 :
             player_car = '4';
             break;
-    //Ouvre le fichier de maps
-    FILE *maps = fopen("../maps.txt", "r");
-    if(maps == NULL) {
-        printf("Le fichier \"maps.txt\" est introuvable.\nVeuillez verifier que ce fichier se trouve bien dans le dossier de l'executable du jeu.\n");
-        return 1;
     }
-    //Variables de jeu
-    int nbBombeDepart = 0;
-    int playingMapWidth = 0;
-    int playingMapHeight = 0;
-    char **playingMap;
-    int mapPrecedente = -1;
-    long pos = 0;
-    int *mapsSelected;
-    int sizeMapsSelected = 0;
-    //Gestion de la sélection menu
-    int nbJoueurs = 0;
 
     if(player_car != 'X'){
         for(int i = 0; i<rows; i++){
@@ -158,27 +141,27 @@ char ** movePlayer(char** map, int rows, int columns, Player * player, char dire
     return map;
 }
 
-void game(int player_size){
+int game(int player_size) {
     int rows = 20;
     int columns = 20;
-    char ** map = malloc(sizeof(char*)*rows);
+    char **map = malloc(sizeof(char *) * rows);
 
-    for(int i = 0; i<rows; i++){
-        for(int y = 0; y<columns; y++) map[i] = malloc(sizeof(char)*columns);
+    for (int i = 0; i < rows; i++) {
+        for (int y = 0; y < columns; y++) map[i] = malloc(sizeof(char) * columns);
     }
 
-    for(int i = 0; i<rows; i++){
-        for(int y = 0; y<columns; y++){
+    for (int i = 0; i < rows; i++) {
+        for (int y = 0; y < columns; y++) {
             map[i][y] = ' ';
-            if(i == 0 || i == rows-1 || y == 0 || y == columns-1) map[i][y] = 'x';
-            if(i == 9 || i == 10 || y == 9 || y == 10) map[i][y] = 'm';
+            if (i == 0 || i == rows - 1 || y == 0 || y == columns - 1) map[i][y] = 'x';
+            if (i == 9 || i == 10 || y == 9 || y == 10) map[i][y] = 'm';
         }
     }
     map[3][3] = '1';
     map[17][3] = '2';
     map[2][16] = '3';
 
-    displayMap(map,rows,columns);
+    displayMap(map, rows, columns);
 
     ///Players Inits :
 
@@ -244,7 +227,7 @@ void game(int player_size){
 
     Player players[4] = {player_1, player_2, player_3, player_4};
 
-    for(int i = 0; i<player_size; i++) findPlayerOnTheMap(map, rows, columns, i, players);
+    for (int i = 0; i < player_size; i++) findPlayerOnTheMap(map, rows, columns, i, players);
 
     ///START OF TURNS
 
@@ -252,25 +235,24 @@ void game(int player_size){
     int turns = 1;
     int who_is_playing = 1;
 
-    printf("\n - - TOUR(S) %d -- \n",turns);
+    printf("\n - - TOUR(S) %d -- \n", turns);
 
-    while(is_playing == 1){
+    while (is_playing == 1) {
 
-        for(int i = 0; i<player_size; i++) if(players[i].hp <= 0 && players[i].dead == 0) playersDeath(map,players,player_size);
-        int win = checkIfWin(players,player_size);
-        if(win != 0 && win != -1){
-            printf("\n\nLe joueur *%d* a gagne !!!!\n\n",win);
+        for (int i = 0; i < player_size; i++) if (players[i].hp <= 0 && players[i].dead == 0) playersDeath(map, players, player_size);
+        int win = checkIfWin(players, player_size);
+        if (win != 0 && win != -1) {
+            printf("\n\nLe joueur *%d* a gagne !!!!\n\n", win);
             break;
-        }
-        else if(win == 0){
+        } else if (win == 0) {
             printf("\n\nEGALITE\n\n");
             break;
         }
 
-        if(players[who_is_playing-1].dead) who_is_playing++;
+        if (players[who_is_playing - 1].dead) who_is_playing++;
 
         printf("\nACTIONS : ");
-        printf("\nC'est au joueur %d de jouer !\n",who_is_playing);
+        printf("\nC'est au joueur %d de jouer !\n", who_is_playing);
         printf("- Fleche de droite si tu veux aller a droite\n");
         printf("- Fleche de gauche si tu veux aller a gauche\n");
         printf("- Fleche du bas si tu veux aller bas\n");
@@ -280,16 +262,16 @@ void game(int player_size){
         printf("- Appuie sur '3' si tu veux poser une bombe en haut\n");
         printf("- Appuie sur '4' si tu veux poser une bombe en bas\n");
 
-        if(checkBombKick(map, players[who_is_playing-1], 'R')) {
+        if (checkBombKick(map, players[who_is_playing - 1], 'R')) {
             printf("- Appuie sur '5' si tu kick une bombe a droite\n");
         }
-        if(checkBombKick(map, players[who_is_playing-1], 'L')) {
+        if (checkBombKick(map, players[who_is_playing - 1], 'L')) {
             printf("- Appuie sur '6' si tu kick une bombe a gauche\n");
         }
-        if(checkBombKick(map, players[who_is_playing-1], 'T')) {
+        if (checkBombKick(map, players[who_is_playing - 1], 'T')) {
             printf("- Appuie sur '7' si tu kick une bombe en haut\n");
         }
-        if(checkBombKick(map, players[who_is_playing-1], 'B')) {
+        if (checkBombKick(map, players[who_is_playing - 1], 'B')) {
             printf("- Appuie sur '8' si tu kick une bombe en bas\n");
         }
 
@@ -307,22 +289,22 @@ void game(int player_size){
             case 224 :
                 temp = getch();
                 //Vérifie quelle flèche a été pressée
-                switch(temp) {
+                switch (temp) {
                     case 72 :
                         printf("haut\n");
-                        movePlayer(map, rows, columns, &players[who_is_playing-1], 'T');
+                        movePlayer(map, rows, columns, &players[who_is_playing - 1], 'T');
                         break;
                     case 80 :
                         printf("bas\n");
-                        movePlayer(map, rows, columns,&players[who_is_playing-1], 'B');
+                        movePlayer(map, rows, columns, &players[who_is_playing - 1], 'B');
                         break;
                     case 75 :
                         printf("gauche\n");
-                        movePlayer(map, rows, columns,&players[who_is_playing-1], 'L');
+                        movePlayer(map, rows, columns, &players[who_is_playing - 1], 'L');
                         break;
                     case 77 :
                         printf("droite\n");
-                        movePlayer(map, rows, columns,&players[who_is_playing-1], 'R');
+                        movePlayer(map, rows, columns, &players[who_is_playing - 1], 'R');
                         break;
                 }
                 break;
@@ -330,47 +312,91 @@ void game(int player_size){
                 is_playing = 0;
                 break;
             case 49 : // -> 1 -> Drop a bomb to the right
-                map = dropBomb(map, players[who_is_playing-1].v_pos,players[who_is_playing-1].h_pos+1,&players[who_is_playing-1],players[who_is_playing-1].bombs_car);
+                map = dropBomb(map, players[who_is_playing - 1].v_pos, players[who_is_playing - 1].h_pos + 1,
+                               &players[who_is_playing - 1], players[who_is_playing - 1].bombs_car);
                 break;
             case 50 : // -> 2 -> Drop a bomb to the left
-                map = dropBomb(map, players[who_is_playing-1].v_pos,players[who_is_playing-1].h_pos-1,&players[who_is_playing-1],players[who_is_playing-1].bombs_car);
+                map = dropBomb(map, players[who_is_playing - 1].v_pos, players[who_is_playing - 1].h_pos - 1,
+                               &players[who_is_playing - 1], players[who_is_playing - 1].bombs_car);
                 break;
             case 51 : // -> 3 -> Drop a bomb above
-                map = dropBomb(map, players[who_is_playing-1].v_pos-1,players[who_is_playing-1].h_pos,&players[who_is_playing-1],players[who_is_playing-1].bombs_car);
+                map = dropBomb(map, players[who_is_playing - 1].v_pos - 1, players[who_is_playing - 1].h_pos,
+                               &players[who_is_playing - 1], players[who_is_playing - 1].bombs_car);
                 break;
             case 52 : // -> 4 -> Drop a bomb under
-                map = dropBomb(map, players[who_is_playing-1].v_pos+1,players[who_is_playing-1].h_pos,&players[who_is_playing-1],players[who_is_playing-1].bombs_car);
+                map = dropBomb(map, players[who_is_playing - 1].v_pos + 1, players[who_is_playing - 1].h_pos,
+                               &players[who_is_playing - 1], players[who_is_playing - 1].bombs_car);
                 break;
             case 53 : // -> 5 -> Kick a bomb to the right
-                if(checkBombKick(map, players[who_is_playing-1], 'R')) map = bombKick(map,rows,columns,'R',players[who_is_playing-1].v_pos,players[who_is_playing-1].h_pos+1);
+                if (checkBombKick(map, players[who_is_playing - 1], 'R'))
+                    map = bombKick(map, rows, columns, 'R', players[who_is_playing - 1].v_pos, players[who_is_playing -
+                                                                                                       1].h_pos + 1);
                 break;
             case 54 : // -> 6 -> Kick a bomb to the left
-                if(checkBombKick(map, players[who_is_playing-1], 'L')) map = bombKick(map,rows,columns,'L',players[who_is_playing-1].v_pos,players[who_is_playing-1].h_pos-1);
+                if (checkBombKick(map, players[who_is_playing - 1], 'L'))
+                    map = bombKick(map, rows, columns, 'L', players[who_is_playing - 1].v_pos, players[who_is_playing -
+                                                                                                       1].h_pos - 1);
                 break;
             case 55 : // -> 7 -> Kick a bomb to the top
-                if(checkBombKick(map, players[who_is_playing-1], 'T')) map = bombKick(map,rows,columns,'T',players[who_is_playing-1].v_pos-1,players[who_is_playing-1].h_pos);
+                if (checkBombKick(map, players[who_is_playing - 1], 'T'))
+                    map = bombKick(map, rows, columns, 'T', players[who_is_playing - 1].v_pos - 1,
+                                   players[who_is_playing - 1].h_pos);
                 break;
             case 56 : // -> 8 -> Kick a bomb to the bottom
-                if(checkBombKick(map, players[who_is_playing-1], 'B')) map = bombKick(map,rows,columns,'B',players[who_is_playing-1].v_pos+1,players[who_is_playing-1].h_pos);
+                if (checkBombKick(map, players[who_is_playing - 1], 'B'))
+                    map = bombKick(map, rows, columns, 'B', players[who_is_playing - 1].v_pos + 1,
+                                   players[who_is_playing - 1].h_pos);
                 break;
             case 32 : // -> space
                 break;
         }
+
+        who_is_playing++;
+        if (who_is_playing > player_size) {
+            who_is_playing = 1;
+            checkAllBombs(map, rows, columns, players);
+        }
+        turns++;
+
+
+        displayMap(map, rows, columns);
+        printf("\n - - TOUR(S) %d -- \n", turns);
+
+    }
+
+    return 0;
+}
+
+int main(){
+
+    //Gestion de l'aléatoire
+    srand(time(NULL));
+
+    //Ouvre le fichier de maps
+    FILE *maps = fopen("../maps.txt", "r");
+    if(maps == NULL) {
+        printf("Le fichier \"maps.txt\" est introuvable.\nVeuillez verifier que ce fichier se trouve bien dans le dossier de l'executable du jeu.\n");
+        return 1;
+    }
+    //Variables de jeu
+    int nbBombeDepart = 0;
+    int playingMapWidth = 0;
+    int playingMapHeight = 0;
+    char **playingMap;
+    int mapPrecedente = -1;
+    long pos = 0;
+    int *mapsSelected;
+    int sizeMapsSelected = 0;
+    //Gestion de la sélection menu
+    int nbJoueurs = 0;
+
     if(menuPrincipal(&nbJoueurs, &pos, maps, &mapsSelected, &sizeMapsSelected)) {
         return 0;
     }
 
-        who_is_playing++;
-        if(who_is_playing > player_size){
-            who_is_playing = 1;
-            checkAllBombs(map,rows,columns,players);
-        }
-        turns++;
     //Début de la boucle de jeu
     system("cls");
 
-        displayMap(map,rows,columns);
-        printf("\n - - TOUR(S) %d -- \n",turns);
     /*
     pos = posCurseurNbJoueurs(maps, nbJoueurs);
     sizeMapsSelected = 4;
@@ -380,9 +406,6 @@ void game(int player_size){
     }
     */
 
-}
-
-int main() {
     printf("nbJoueurs=%d\nsizeMapsSelected=%d\nmapsSelected=", nbJoueurs, sizeMapsSelected);
     for(int i=0; i<sizeMapsSelected; i++) {
         printf("%d;", mapsSelected[i]);
@@ -390,86 +413,18 @@ int main() {
     printf("\n");
     //while(1);
 
-    //printf("Hello, World!\n"); //affiche
     int isPlaying = 1;
     int input = 0;
 
-    srand(time(NULL));
     while(isPlaying) {
         playingMap = initGame(&nbBombeDepart, &playingMapWidth, &playingMapHeight, &mapPrecedente, maps, pos, mapsSelected, sizeMapsSelected);
         printf("nbBombeDepart=%d; playingMapWidth=%d; playingMapHeight=%d;\nplayingMap=\n", nbBombeDepart, playingMapWidth, playingMapHeight);
         affTabMap(playingMap, playingMapWidth, playingMapHeight);
 
-    /*
         input = getch();
         if(input == 27) {
             isPlaying = 0;
         }
-
-    ///Players Inits :
-
-    Player player_1 = {
-            .hp = 3,
-            .max_hp = 3,
-            .max_bombs = 2,
-            .range = 2,
-            .current_bombs = 2,
-            .invincibility = 0, //isn't invincible yet
-            .bomb_special_power_up = -1, //don't have any special power up
-            .heart=0, //didn't get a heart this game
-            .bombs_car="ABC",
-            .dead = 0,
-            .v_pos = 0,
-            .h_pos = 0
-    };
-
-    Player player_2 = {
-            .hp = 3,
-            .max_hp = 3,
-            .max_bombs = 2,
-            .range = 2,
-            .current_bombs = 2,
-            .invincibility = 0, //isn't invincible yet
-            .bomb_special_power_up = -1, //don't have any special power up
-            .heart=0, //didn't get a heart this game
-            .bombs_car="DEF",
-            .dead = 0,
-            .v_pos = 3,
-            .h_pos = 7
-    };
-
-    Player player_3 = {
-            .hp = 3,
-            .max_hp = 3,
-            .max_bombs = 2,
-            .range = 2,
-            .current_bombs = 2,
-            .invincibility = 0, //isn't invincible yet
-            .bomb_special_power_up = -1, //don't have any special power up
-            .heart=0, //didn't get a heart this game
-            .bombs_car="GHI",
-            .dead = 0,
-            .v_pos = 5,
-            .h_pos = 5
-    };
-
-    Player player_4 = {
-            .hp = 3,
-            .max_hp = 3,
-            .max_bombs = 2,
-            .range = 2,
-            .current_bombs = 2,
-            .invincibility = 0, //isn't invincible yet
-            .bomb_special_power_up = -1, //don't have any special power up
-            .heart=0, //didn't get a heart this game
-            .bombs_car="JKL",
-            .dead = 0,
-            .v_pos = 2,
-            .h_pos = 2
-    };
-    */
-
-    game(3);
 
         free(playingMap);
     }
