@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <conio.h>
 #include "bombs.h"
 #include "time.h"
 
@@ -166,26 +167,49 @@ void game(int player_size){
 
         printf("\nACTIONS : ");
         printf("\nC'est au joueur %d de jouer !\n",who_is_playing);
-        printf("- Entre '1' si tu veux aller a droite\n");
-        printf("- Entre '2' si tu veux aller a gauche\n");
-        printf("- Entre '3' si tu veux aller a haut\n");
-        printf("- Entre '4' si tu veux aller a bas\n");
+        printf("- Flèche de droite si tu veux aller a droite\n");
+        printf("- Flèche de gauche si tu veux aller a gauche\n");
+        printf("- Flèche du bas si tu veux aller bas\n");
+        printf("- Flèche du haut si tu veux aller haut\n");
         printf("- Entre '0' si tu veux quitter la partie.\n");
         printf("\nInput : ");
-        int value;
-        int input = scanf("%d",&value);
-        fflush(stdin);
+
+        int temp = getch();
+
+        //Vérifie qu'une flèche a été pressé
+        switch (temp) {
+            case 224 :
+                temp = getch();
+                //Vérifie quel flèche a été pressé
+                switch(temp) {
+                    case 72 :
+                        printf("haut\n");
+                        break;
+                    case 80 :
+                        printf("bas\n");
+                        break;
+                    case 75 :
+                        printf("gauche\n");
+                        break;
+                    case 77 :
+                        printf("droite\n");
+                        break;
+                }
+                break;
+            case 48 : // -> 0
+                is_playing = 0;
+                break;
+            case 32 : // -> espace
+                break;
+        }
+
+
         system("cls");
 
         displayMap(map,rows,columns);
         printf("\n - - TOUR(S) %d -- \n",turns);
         printf("\nINFOS : \n");
-        if(input){
-            if(value == 0) is_playing = 0;
-            else if(value == -1) takeDamage('1',players);
-            else printf("\nvalue = %d\n",value);
-        }
-        else printf("\n** DEBUG ** -> Il y a un problème avec la saisie utilisateur !\n");
+
 
         who_is_playing++;
         if(who_is_playing > player_size) who_is_playing = 1;
