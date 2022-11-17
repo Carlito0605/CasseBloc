@@ -74,6 +74,17 @@ void game(int player_size){
     map[17][3] = '2';
     map[2][16] = '3';
 
+    //TEST PLACEMENT DES BOMBES
+    map[3][3] = 'A';
+    map[3][4] = 'A';
+    map[16][2] = 'D';
+    map[15][3] = 'G';
+    map[16][4] = 'J';
+    map[2][15] = 'D';
+    map[1][16] = 'G';
+    map[2][17] = 'J';
+    //END TEST
+
     displayMap(map,rows,columns);
 
     ///Players Inits :
@@ -142,6 +153,11 @@ void game(int player_size){
 
     for(int i = 0; i<player_size; i++) findPlayerOnTheMap(map, rows, columns, i, players);
 
+    //TEST checkBombKick() en donnant BombKick à tous les joueurs
+    for(int i=0; i<4; i++) {
+        players[i].bomb_special_power_up = 1;
+    }
+
     ///START OF TURNS
 
     int is_playing = 1;
@@ -165,6 +181,30 @@ void game(int player_size){
 
         if(players[who_is_playing-1].dead) who_is_playing++;
 
+
+        printf("position du joueur : [%d;%d]\n", players[who_is_playing-1].h_pos, players[who_is_playing-1].v_pos);
+        //TEST checkBombKick
+        int checkR = checkBombKick(map, players[who_is_playing-1], 'R');
+        int checkL = checkBombKick(map, players[who_is_playing-1], 'L');
+        int checkT = checkBombKick(map, players[who_is_playing-1], 'T');
+        int checkB = checkBombKick(map, players[who_is_playing-1], 'B');
+        if(checkR) {
+            printf("Peut utiliser Bomb Kick à droite\n");
+        }
+        if(checkL) {
+            printf("Peut utiliser Bomb Kick à gauche\n");
+        }
+        if(checkT) {
+            printf("Peut utiliser Bomb Kick en haut\n");
+        }
+        if(checkB) {
+            printf("Peut utiliser Bomb Kick en bas\n");
+        }
+        if(!(checkR || checkL || checkT || checkB)) {
+            printf("Ne peut pas utiliser Bomb Kick\n");
+        }
+        //END TEST
+
         printf("\nACTIONS : ");
         printf("\nC'est au joueur %d de jouer !\n",who_is_playing);
         printf("- Flèche de droite si tu veux aller a droite\n");
@@ -176,11 +216,11 @@ void game(int player_size){
 
         int temp = getch();
 
-        //Vérifie qu'une flèche a été pressé
+        //Vérifie qu'une flèche a été pressée
         switch (temp) {
             case 224 :
                 temp = getch();
-                //Vérifie quel flèche a été pressé
+                //Vérifie quelle flèche a été pressée
                 switch(temp) {
                     case 72 :
                         printf("haut\n");
@@ -287,36 +327,6 @@ int main() {
             .v_pos = 2,
             .h_pos = 2
     };
-
-            while(isOnSelectJoueur) {
-                input = getch();
-                //Appuie sur une flèche
-                if(input == 224) {
-                    changeRang(&rangJoueur, 3);
-                    menu(titre, ssJoueur, 3, rangJoueur);
-                }
-                //Touche Entrée
-                else if(input == 13) {
-                    isOnSelectJoueur = 0;
-                    isOnSelectMaps = 1;
-                }
-                //Touche Échap
-                else if(input == 27) {
-                    isOnSelectJoueur = 0;
-                    isOnTitleScreen = 1;
-                }
-            }
-        }
-        else if(isOnSelectMaps) {
-            pos = posCurseurNbJoueurs(maps, rangJoueur);
-            sizeMapsSelected = nbMaps(maps, pos);
-            mapsSelected = malloc(sizeof(int) * sizeMapsSelected);
-            for(int i=0; i<sizeMapsSelected; i++) {
-                mapsSelected[i] = 1;
-            }
-            int rangMaps = 0;
-
-    //test(10,15, players); //Function to test that bombs are working
     */
 
     game(3);

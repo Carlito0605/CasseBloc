@@ -567,3 +567,54 @@ void test(int rows, int columns, Player* players){
 
     free(map);
 }
+
+
+/** Vérifie que le joueur actuel peut utiliser Bomb kick. Retourne 1 si vrai, 0 sinon
+ * char **map : la map de jeu actuel.
+ * Player *player : le joueur sur lequel on fait la vérification.
+ * char direction : la direction autour du joueur à tester (R->Right, L->Left, T->Top, B->Bottom). */
+int checkBombKick(char **map, Player player, char direction) {
+    //Vérifie que le joueur a bien le power up Bomb Kick
+    if(player.bomb_special_power_up != 1) {
+        return 0;
+    }
+
+    //Vérifie tous les caractères de bombes à droite
+    if(direction == 'R') {
+        for(char i=65; i<=76; i++) {
+            if(map[player.v_pos][(player.h_pos)+1] == i) {
+                return 1;
+            }
+        }
+        return 0;
+    }
+    //Vérifie tous les caractères de bombes à gauche
+    else if(direction == 'L') {
+        for(char i=65; i<=76; i++) {
+            if(map[player.v_pos][(player.h_pos)-1] == i) {
+                return 1;
+            }
+        }
+        return 0;
+    }
+    //Vérifie tous les caractères de bombes en haut
+    else if(direction == 'T') {
+        for(char i=65; i<=76; i++) {
+            if(map[(player.v_pos)-1][player.h_pos] == i) {
+                return 1;
+            }
+        }
+        return 0;
+    }
+    //Vérifie tous les caractères de bombes en bas
+    else if(direction == 'B') {
+        for(char i=65; i<=76; i++) {
+            if(map[(player.v_pos)+1][player.h_pos] == i) {
+                return 1;
+            }
+        }
+        return 0;
+    }
+    //Dans le cas où la direction est incorrecte
+    return -1;
+}
