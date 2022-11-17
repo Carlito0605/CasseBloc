@@ -54,6 +54,25 @@ int checkIfWin(Player * players, int player_size){
    return -1;
 }
 
+void checkInvincibilities(){
+}
+
+void isOutOfTheMap(char ** map, int rows, int columns, Player * player, int v_increment, int h_increment){
+    printf("\n** DEBUG ** -> Sortie de map\n");
+    int next_v = player->v_pos+v_increment;
+    int next_h = player->h_pos+h_increment;
+    if(next_v >= rows) next_v = 0;
+    if(next_v < 0) next_v = rows-1;
+    if(next_h >= columns) next_h = 0;
+    if(next_h < 0) next_h = columns-1;
+
+    if(map[next_v][next_h] == ' '){
+        printf("here");
+        player->v_pos = next_v;
+        player->h_pos = next_h;
+    }
+}
+
 char ** movePlayer(char** map, int rows, int columns, Player * player, char direction){
 
     char temp = map[player->v_pos][player->h_pos];
@@ -77,17 +96,34 @@ char ** movePlayer(char** map, int rows, int columns, Player * player, char dire
             break;
     }
 
-    if(player->v_pos+v_increment >= rows){
-        printf("\n** DEBUG ** -> Vous sortez de la map\n");
+    if(player->v_pos+v_increment >= rows || player->v_pos+v_increment < 0 || player->h_pos+h_increment >= columns || player->h_pos+h_increment < 0){
+        printf("\n** DEBUG ** -> Sortie de map\n");
+        int next_v = player->v_pos+v_increment;
+        int next_h = player->h_pos+h_increment;
+        if(next_v >= rows) next_v = 0;
+        if(next_v < 0) next_v = rows-1;
+        if(next_h >= columns) next_h = 0;
+        if(next_h < 0) next_h = columns-1;
+
+        if(map[next_v][next_h] == ' '){
+            player->v_pos = next_v;
+            player->h_pos = next_h;
+        }
+        else if(player->bomb_special_power_up == 0 && map[next_v][next_h] >= 'A' && map[next_v][next_h] <= 'L' && map[next_v+v_increment][next_h+h_increment] == ' '){
+            printf("\n** DEBUG ** -> Passebomb + Trou de map\n");
+            player->v_pos = next_v+v_increment;
+            player->h_pos = next_h+h_increment;
+        }
     }
-    else if(player->v_pos+v_increment < 0){
-        printf("\n** DEBUG ** -> Vous sortez de la map\n");
-    }
-    else if(player->h_pos+h_increment >= columns){
-        printf("\n** DEBUG ** -> Vous sortez de la map\n");
-    }
-    else if(player->h_pos+h_increment < 0){
-        printf("\n** DEBUG ** -> Vous sortez de la map\n");
+    else if(player->bomb_special_power_up == 0 && map[player->v_pos+v_increment][player->h_pos+h_increment] >= 'A' && map[player->v_pos+v_increment][player->h_pos+h_increment] <= 'L'){
+        printf("\n** DEBUG ** -> Passebomb\n");
+        if(player->v_pos+(v_increment*2) >= rows || player->v_pos+(v_increment*2) < 0 || player->h_pos+(h_increment*2) >= columns || player->h_pos+(h_increment*2) < 0){
+            isOutOfTheMap(map,rows,columns,player,(v_increment*2),(h_increment*2));
+        }
+        else if(map[player->v_pos+(v_increment*2)][player->h_pos+(h_increment*2)] == ' '){
+            player->v_pos = player->v_pos+(v_increment*2);
+            player->h_pos = player->h_pos+(h_increment*2);
+        }
     }
     else if(map[player->v_pos+v_increment][player->h_pos+h_increment] != ' '){
         printf("\n** DEBUG ** -> Vous ne pouvez pas avancer là "
@@ -115,11 +151,12 @@ void game(int player_size){
     for(int i = 0; i<rows; i++){
         for(int y = 0; y<columns; y++){
             map[i][y] = ' ';
-            if(i == 0 || i == rows-1 || y == 0 || y == columns-1) map[i][y] = 'x';
+            //if(i == 0 || i == rows-1 || y == 0 || y == columns-1) map[i][y] = 'x';
             if(i == 9 || i == 10 || y == 9 || y == 10) map[i][y] = 'm';
         }
     }
-    map[7][7] = '1';
+    map[0][0] = 'A';
+    map[0][19] = '1';
     map[17][3] = '2';
     map[2][16] = '3';
 
@@ -134,7 +171,7 @@ void game(int player_size){
             .range = 2,
             .current_bombs = 2,
             .invincibility = 0, //isn't invincible yet
-            .bomb_special_power_up = -1, //don't have any special power up
+            .bomb_special_power_up = 0, //don't have any special power up
             .heart=0, //didn't get a heart this game
             .bombs_car="ABC",
             .dead = 0,
