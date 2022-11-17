@@ -379,11 +379,11 @@ char** dropBomb(char**map, int v_pos, int h_pos, Player* player, char* bomb_car)
         if(player->current_bombs > 0){
             map[v_pos][h_pos] = bomb_car[0];
             player->current_bombs--;
-            printf("Vous avez pose une bombe %c, il vous en reste %d\n",bomb_car[0],player->current_bombs);
+            printf("- Vous avez pose une bombe %c, il vous en reste %d\n",bomb_car[0],player->current_bombs);
         }
-        else printf("Vous n'avez plus assez de bombes !\n");
+        else printf("- Vous n'avez plus assez de bombes !\n");
     }
-    else printf("Vous ne pouvez pas placer de bombe ici car : %c \n",map[v_pos][h_pos]);
+    else printf("- Vous ne pouvez pas placer de bombe ici car : %c \n",map[v_pos][h_pos]);
 
     return map;
 }
