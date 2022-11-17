@@ -54,6 +54,55 @@ int checkIfWin(Player * players, int player_size){
    return -1;
 }
 
+char ** movePlayer(char** map, int rows, int columns, Player * player, char direction){
+
+    char temp = map[player->v_pos][player->h_pos];
+    map[player->v_pos][player->h_pos] = ' ';
+
+    int v_increment = 0;
+    int h_increment = 0;
+
+    switch(direction){
+        case 'L':
+            h_increment--;
+            break;
+        case 'R':
+            h_increment++;
+            break;
+        case 'T':
+            v_increment--;
+            break;
+        case 'B':
+            v_increment++;
+            break;
+    }
+
+    if(player->v_pos+v_increment >= rows){
+        printf("\n** DEBUG ** -> Vous sortez de la map\n");
+    }
+    else if(player->v_pos+v_increment < 0){
+        printf("\n** DEBUG ** -> Vous sortez de la map\n");
+    }
+    else if(player->h_pos+h_increment >= columns){
+        printf("\n** DEBUG ** -> Vous sortez de la map\n");
+    }
+    else if(player->h_pos+h_increment < 0){
+        printf("\n** DEBUG ** -> Vous sortez de la map\n");
+    }
+    else if(map[player->v_pos+v_increment][player->h_pos+h_increment] != ' '){
+        printf("\n** DEBUG ** -> Vous ne pouvez pas avancer là "
+               "car la prochaine case est : %c\n",map[player->v_pos+v_increment][player->h_pos+h_increment]);
+    }
+    else{
+        player->v_pos += v_increment;
+        player->h_pos += h_increment;
+    }
+
+    map[player->v_pos][player->h_pos] = temp;
+
+    return map;
+}
+
 void game(int player_size){
     int rows = 20;
     int columns = 20;
@@ -70,7 +119,7 @@ void game(int player_size){
             if(i == 9 || i == 10 || y == 9 || y == 10) map[i][y] = 'm';
         }
     }
-    map[2][3] = '1';
+    map[7][7] = '1';
     map[17][3] = '2';
     map[2][16] = '3';
 
@@ -171,10 +220,18 @@ void game(int player_size){
         printf("- Flèche de gauche si tu veux aller a gauche\n");
         printf("- Flèche du bas si tu veux aller bas\n");
         printf("- Flèche du haut si tu veux aller haut\n");
-        printf("- Entre '0' si tu veux quitter la partie.\n");
+        printf("- Appuie sur '1' si tu veux poser une bombe à droite\n");
+        printf("- Appuie sur '2' si tu veux poser une bombe à gauche\n");
+        printf("- Appuie sur '3' si tu veux poser une bombe en haut\n");
+        printf("- Appuie sur '4' si tu veux poser une bombe en bas\n");
+        printf("- Appuie sur '0' si tu veux quitter la partie.\n");
         printf("\nInput : ");
 
         int temp = getch();
+
+        system("cls");
+
+        printf("\nINFOS : \n");
 
         //Vérifie qu'une flèche a été pressé
         switch (temp) {
@@ -184,36 +241,50 @@ void game(int player_size){
                 switch(temp) {
                     case 72 :
                         printf("haut\n");
+                        movePlayer(map, rows, columns, &players[who_is_playing-1], 'T');
                         break;
                     case 80 :
                         printf("bas\n");
+                        movePlayer(map, rows, columns,&players[who_is_playing-1], 'B');
                         break;
                     case 75 :
                         printf("gauche\n");
+                        movePlayer(map, rows, columns,&players[who_is_playing-1], 'L');
                         break;
                     case 77 :
                         printf("droite\n");
+                        movePlayer(map, rows, columns,&players[who_is_playing-1], 'R');
                         break;
                 }
                 break;
             case 48 : // -> 0
                 is_playing = 0;
                 break;
-            case 32 : // -> espace
+            case 49 : // -> 1 -> Drop a bomb to the right
+                map = dropBomb(map, players[who_is_playing-1].v_pos,players[who_is_playing-1].h_pos+1,&players[who_is_playing-1],players[who_is_playing-1].bombs_car);
+                break;
+            case 50 : // -> 2 -> Drop a bomb to the left
+                map = dropBomb(map, players[who_is_playing-1].v_pos,players[who_is_playing-1].h_pos-1,&players[who_is_playing-1],players[who_is_playing-1].bombs_car);
+                break;
+            case 51 : // -> 3 -> Drop a bomb above
+                map = dropBomb(map, players[who_is_playing-1].v_pos-1,players[who_is_playing-1].h_pos,&players[who_is_playing-1],players[who_is_playing-1].bombs_car);
+                break;
+            case 52 : // -> 4 -> Drop a bomb under
+                map = dropBomb(map, players[who_is_playing-1].v_pos+1,players[who_is_playing-1].h_pos,&players[who_is_playing-1],players[who_is_playing-1].bombs_car);
+                break;
+            case 32 : // -> space
                 break;
         }
 
-
-        system("cls");
+        who_is_playing++;
+        if(who_is_playing > player_size){
+            who_is_playing = 1;
+            checkAllBombs(map,rows,columns,players);
+        }
+        turns++;
 
         displayMap(map,rows,columns);
         printf("\n - - TOUR(S) %d -- \n",turns);
-        printf("\nINFOS : \n");
-
-
-        who_is_playing++;
-        if(who_is_playing > player_size) who_is_playing = 1;
-        turns++;
     }
 
 }
