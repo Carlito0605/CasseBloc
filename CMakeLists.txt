@@ -3,4 +3,4 @@ project(CasseBloc)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(CasseBloc main.c bombs.c bombs.h menu.c menu.h)
+add_executable(CasseBloc main.c bombs.c bombs.h menu.c menu.h map.c map.h)
