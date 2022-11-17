@@ -581,37 +581,29 @@ int checkBombKick(char **map, Player player, char direction) {
 
     //Vérifie tous les caractères de bombes à droite
     if(direction == 'R') {
-        for(char i=65; i<=76; i++) {
-            if(map[player.v_pos][(player.h_pos)+1] == i) {
-                return 1;
-            }
+        if(map[player.v_pos][(player.h_pos)+1] >= 'A' && map[player.v_pos][(player.h_pos)+1] <= 'L') {
+            return 1;
         }
         return 0;
     }
     //Vérifie tous les caractères de bombes à gauche
     else if(direction == 'L') {
-        for(char i=65; i<=76; i++) {
-            if(map[player.v_pos][(player.h_pos)-1] == i) {
-                return 1;
-            }
+        if(map[player.v_pos][(player.h_pos)-1] >= 'A' && map[player.v_pos][(player.h_pos)-1] <= 'L') {
+            return 1;
         }
         return 0;
     }
     //Vérifie tous les caractères de bombes en haut
     else if(direction == 'T') {
-        for(char i=65; i<=76; i++) {
-            if(map[(player.v_pos)-1][player.h_pos] == i) {
-                return 1;
-            }
+        if(map[(player.v_pos)-1][player.h_pos] >= 'A' && map[(player.v_pos)-1][player.h_pos] <= 'L') {
+            return 1;
         }
         return 0;
     }
     //Vérifie tous les caractères de bombes en bas
     else if(direction == 'B') {
-        for(char i=65; i<=76; i++) {
-            if(map[(player.v_pos)+1][player.h_pos] == i) {
-                return 1;
-            }
+        if(map[(player.v_pos)+1][player.h_pos] >= 'A' && map[(player.v_pos)+1][player.h_pos] <= 'L') {
+            return 1;
         }
         return 0;
     }

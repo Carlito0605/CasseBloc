@@ -181,8 +181,6 @@ void game(int player_size){
 
         if(players[who_is_playing-1].dead) who_is_playing++;
 
-
-        printf("position du joueur : [%d;%d]\n", players[who_is_playing-1].h_pos, players[who_is_playing-1].v_pos);
         //TEST checkBombKick
         int checkR = checkBombKick(map, players[who_is_playing-1], 'R');
         int checkL = checkBombKick(map, players[who_is_playing-1], 'L');
