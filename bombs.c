@@ -93,6 +93,17 @@ int findPlayerWithBomb(char bomb){
     return -1;
 }
 
+char ** clearExplosions(char**map,int rows, int columns){
+
+    for(int i = 0; i<rows; i++){
+        for(int y = 0; y<columns; y++){
+            if(map[i][y] == '*') map[i][y] = ' ';
+        }
+    }
+
+    return map;
+}
+
 void dropObject(char bomb, Player * players){
 
     /// This function has 1 out of n(dice_random_max) chance to drop an object

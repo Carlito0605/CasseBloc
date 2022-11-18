@@ -21,6 +21,7 @@ void displayMap(char**map, int rows, int columns);
 void displayMapDEBUG(char**map, int rows, int columns);
 void displayPlayersStats(Player * players,int players_size);
 int findPlayerWithBomb(char bomb);
+char ** clearExplosions(char**map,int rows, int columns);
 void dropObject(char bomb, Player * players);
 void takeDamage(char player_number,Player * players);
 char** explosionAtThatPlace(char**map, int rows, int columns, int v_pos, int h_pos, Player* players,char bomb);

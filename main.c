@@ -345,19 +345,19 @@ int game(char **map, int rows, int columns, int nb_bomb, int player_size) {
                         //Vérifie quelle flèche a été pressée
                         switch (temp) {
                             case 72 :
-                                printf("haut\n");
+                                printf("- Vous avancez en haut\n");
                                 movePlayer(map, rows, columns, &players[who_is_playing - 1], 'T');
                                 break;
                             case 80 :
-                                printf("bas\n");
+                                printf("- Vous avancez en bas\n");
                                 movePlayer(map, rows, columns, &players[who_is_playing - 1], 'B');
                                 break;
                             case 75 :
-                                printf("gauche\n");
+                                printf("- Vous avancez a gauche\n");
                                 movePlayer(map, rows, columns, &players[who_is_playing - 1], 'L');
                                 break;
                             case 77 :
-                                printf("droite\n");
+                                printf("- Vous avancez a droite\n");
                                 movePlayer(map, rows, columns, &players[who_is_playing - 1], 'R');
                                 break;
                         }
@@ -433,6 +433,10 @@ int game(char **map, int rows, int columns, int nb_bomb, int player_size) {
             printf("\n");
             affTabMap(map, columns, rows);
             printf("\n - - TOUR(S) %d -- \n", turns);
+
+            if (who_is_playing == 1) {
+                clearExplosions(map,rows,columns);
+            }
         }
     }
 
@@ -442,6 +446,35 @@ int game(char **map, int rows, int columns, int nb_bomb, int player_size) {
 int main(){
     //Gestion de l'aléatoire
     srand(time(NULL));
+
+    int rows = 20;
+    int columns = 20;
+    int nb_bomb = 2;
+    int player_size = 3;
+
+    char ** map = malloc(sizeof(char*)*rows);
+
+    for(int i = 0; i<rows; i++){
+        for(int y = 0; y<columns; y++) map[i] = malloc(sizeof(char)*columns);
+    }
+
+    for(int i = 0; i<rows; i++){
+        for(int y = 0; y<columns; y++){
+            map[i][y] = ' ';
+            if(i == 0 || i == rows-1 || y == 0 || y == columns-1) map[i][y] = 'x';
+            if(i == 9 || i == 10 || y == 9 || y == 10) map[i][y] = 'm';
+        }
+    }
+    map[2][2] = '*';
+    map[7][7] = '*';
+    map[2][3] = '#';
+    map[3][3] = '1';
+    map[17][3] = '2';
+    map[2][16] = '3';
+
+    game(map,rows,columns,nb_bomb,player_size);
+
+    /*
     
     //Ouvre le fichier de maps
     FILE *maps = fopen("../maps.txt", "r");
@@ -489,5 +522,6 @@ int main(){
         free(playingMap);
     }
     fclose(maps);
+    */
     return 0;
 }
