@@ -250,6 +250,8 @@ int game(char **map, int rows, int columns, int nb_bomb, int player_size) {
     int is_playing = 1;
     int turns = 1;
     int who_is_playing = 1;
+    int not_ready = 0;
+    int max_actions = 3;
 
     printf("\n -- TOUR(S) %d -- \n", turns);
 
@@ -287,124 +289,149 @@ int game(char **map, int rows, int columns, int nb_bomb, int player_size) {
                 player_car = 4;
                 break;
         }
-        printf("\nC'est au joueur %c de jouer !\n", player_car);
-        printf("- Fleche de droite si tu veux aller a droite\n");
-        printf("- Fleche de gauche si tu veux aller a gauche\n");
-        printf("- Fleche du bas si tu veux aller bas\n");
-        printf("- Fleche du haut si tu veux aller haut\n");
-        printf("- Appuie sur '1' si tu veux poser une bombe a droite\n");
-        printf("- Appuie sur '2' si tu veux poser une bombe a gauche\n");
-        printf("- Appuie sur '3' si tu veux poser une bombe en haut\n");
-        printf("- Appuie sur '4' si tu veux poser une bombe en bas\n");
-
-        if (checkBombKick(map, players[who_is_playing - 1], 'R')) {
-            printf("- Appuie sur '5' si tu kick une bombe a droite\n");
-        }
-        if (checkBombKick(map, players[who_is_playing - 1], 'L')) {
-            printf("- Appuie sur '6' si tu kick une bombe a gauche\n");
-        }
-        if (checkBombKick(map, players[who_is_playing - 1], 'T')) {
-            printf("- Appuie sur '7' si tu kick une bombe en haut\n");
-        }
-        if (checkBombKick(map, players[who_is_playing - 1], 'B')) {
-            printf("- Appuie sur '8' si tu kick une bombe en bas\n");
-        }
-
-        printf("- Appuie sur '0' si tu veux quitter la partie.\n");
-        printf("\nInput : ");
+        printf("\nC'est au joueur %c de jouer ! Appuye sur 'entree' si tu es prets ! (ou 'echap' si tu veux quitter)\n", player_car);
 
         int temp = getch();
-
-        system("cls");
-
-        printf("\nINFOS : \n");
-
-        //Vérifie qu'une flèche a été pressé
-        switch (temp) {
-            case 224 :
-                temp = getch();
-                //Vérifie quelle flèche a été pressée
-                switch (temp) {
-                    case 72 :
-                        printf("haut\n");
-                        movePlayer(map, rows, columns, &players[who_is_playing - 1], 'T');
+        if(temp != 13){
+            if(temp == 27) is_playing = 0;
+            else{
+                while(temp != 13){
+                    if(temp == 27){
+                        is_playing = 0;
                         break;
-                    case 80 :
-                        printf("bas\n");
-                        movePlayer(map, rows, columns, &players[who_is_playing - 1], 'B');
-                        break;
-                    case 75 :
-                        printf("gauche\n");
-                        movePlayer(map, rows, columns, &players[who_is_playing - 1], 'L');
-                        break;
-                    case 77 :
-                        printf("droite\n");
-                        movePlayer(map, rows, columns, &players[who_is_playing - 1], 'R');
-                        break;
+                    }
+                    //printf("\n** DEBUG ** -> %d\n",temp);
+                    temp = getch();
                 }
-                break;
-            case 48 : // -> 0
-                is_playing = 0;
-                break;
-            case 49 : // -> 1 -> Drop a bomb to the right
-                map = dropBomb(map, players[who_is_playing - 1].v_pos, players[who_is_playing - 1].h_pos + 1,
-                               &players[who_is_playing - 1], players[who_is_playing - 1].bombs_car);
-                break;
-            case 50 : // -> 2 -> Drop a bomb to the left
-                map = dropBomb(map, players[who_is_playing - 1].v_pos, players[who_is_playing - 1].h_pos - 1,
-                               &players[who_is_playing - 1], players[who_is_playing - 1].bombs_car);
-                break;
-            case 51 : // -> 3 -> Drop a bomb above
-                map = dropBomb(map, players[who_is_playing - 1].v_pos - 1, players[who_is_playing - 1].h_pos,
-                               &players[who_is_playing - 1], players[who_is_playing - 1].bombs_car);
-                break;
-            case 52 : // -> 4 -> Drop a bomb under
-                map = dropBomb(map, players[who_is_playing - 1].v_pos + 1, players[who_is_playing - 1].h_pos,
-                               &players[who_is_playing - 1], players[who_is_playing - 1].bombs_car);
-                break;
-            case 53 : // -> 5 -> Kick a bomb to the right
-                if (checkBombKick(map, players[who_is_playing - 1], 'R'))
-                    map = bombKick(map, rows, columns, 'R', players[who_is_playing - 1].v_pos, players[who_is_playing -
-                                                                                                       1].h_pos + 1);
-                break;
-            case 54 : // -> 6 -> Kick a bomb to the left
-                if (checkBombKick(map, players[who_is_playing - 1], 'L'))
-                    map = bombKick(map, rows, columns, 'L', players[who_is_playing - 1].v_pos, players[who_is_playing -
-                                                                                                       1].h_pos - 1);
-                break;
-            case 55 : // -> 7 -> Kick a bomb to the top
-                if (checkBombKick(map, players[who_is_playing - 1], 'T'))
-                    map = bombKick(map, rows, columns, 'T', players[who_is_playing - 1].v_pos - 1,
-                                   players[who_is_playing - 1].h_pos);
-                break;
-            case 56 : // -> 8 -> Kick a bomb to the bottom
-                if (checkBombKick(map, players[who_is_playing - 1], 'B'))
-                    map = bombKick(map, rows, columns, 'B', players[who_is_playing - 1].v_pos + 1,
-                                   players[who_is_playing - 1].h_pos);
-                break;
-            case 32 : // -> space
-                break;
-        }
-
-        for(int i=0; i<player_size; i++) {
-            if(players[i].invincibility > 0) {
-                players[i].invincibility--;
-                printf("- Il reste %d tours d'invincibilite au joueur %d\n", players[i].invincibility, i+1);
             }
         }
+        if(is_playing != 0) {
+            for(int i = max_actions; i>0; i--){
+                printf("\nIl te reste %d action(s) :\n",i);
+                printf("- Fleche de droite si tu veux aller a droite\n");
+                printf("- Fleche de gauche si tu veux aller a gauche\n");
+                printf("- Fleche du bas si tu veux aller bas\n");
+                printf("- Fleche du haut si tu veux aller haut\n");
+                printf("- Appuie sur '1' si tu veux poser une bombe a droite\n");
+                printf("- Appuie sur '2' si tu veux poser une bombe a gauche\n");
+                printf("- Appuie sur '3' si tu veux poser une bombe en haut\n");
+                printf("- Appuie sur '4' si tu veux poser une bombe en bas\n");
 
-        who_is_playing++;
-        if (who_is_playing > player_size) {
-            who_is_playing = 1;
-            checkAllBombs(map, rows, columns, players);
+                if (checkBombKick(map, players[who_is_playing - 1], 'R')) {
+                    printf("- Appuie sur '5' si tu kick une bombe a droite\n");
+                }
+                if (checkBombKick(map, players[who_is_playing - 1], 'L')) {
+                    printf("- Appuie sur '6' si tu kick une bombe a gauche\n");
+                }
+                if (checkBombKick(map, players[who_is_playing - 1], 'T')) {
+                    printf("- Appuie sur '7' si tu kick une bombe en haut\n");
+                }
+                if (checkBombKick(map, players[who_is_playing - 1], 'B')) {
+                    printf("- Appuie sur '8' si tu kick une bombe en bas\n");
+                }
+
+                printf("- Appuie sur 'echap' si tu veux quitter la partie.\n");
+                printf("\nInput : ");
+
+                temp = getch();
+
+                system("cls");
+
+                printf("\nINFOS : \n");
+
+                //Vérifie qu'une flèche a été pressé
+                switch (temp) {
+                    case 224 :
+                        temp = getch();
+                        //Vérifie quelle flèche a été pressée
+                        switch (temp) {
+                            case 72 :
+                                printf("haut\n");
+                                movePlayer(map, rows, columns, &players[who_is_playing - 1], 'T');
+                                break;
+                            case 80 :
+                                printf("bas\n");
+                                movePlayer(map, rows, columns, &players[who_is_playing - 1], 'B');
+                                break;
+                            case 75 :
+                                printf("gauche\n");
+                                movePlayer(map, rows, columns, &players[who_is_playing - 1], 'L');
+                                break;
+                            case 77 :
+                                printf("droite\n");
+                                movePlayer(map, rows, columns, &players[who_is_playing - 1], 'R');
+                                break;
+                        }
+                        break;
+                    case 27 : // -> echap
+                        is_playing = 0;
+                        break;
+                    case 48 : // -> fin du tour
+
+                        break;
+                    case 49 : // -> 1 -> Drop a bomb to the right
+                        map = dropBomb(map, players[who_is_playing - 1].v_pos, players[who_is_playing - 1].h_pos + 1,
+                                       &players[who_is_playing - 1], players[who_is_playing - 1].bombs_car);
+                        break;
+                    case 50 : // -> 2 -> Drop a bomb to the left
+                        map = dropBomb(map, players[who_is_playing - 1].v_pos, players[who_is_playing - 1].h_pos - 1,
+                                       &players[who_is_playing - 1], players[who_is_playing - 1].bombs_car);
+                        break;
+                    case 51 : // -> 3 -> Drop a bomb above
+                        map = dropBomb(map, players[who_is_playing - 1].v_pos - 1, players[who_is_playing - 1].h_pos,
+                                       &players[who_is_playing - 1], players[who_is_playing - 1].bombs_car);
+                        break;
+                    case 52 : // -> 4 -> Drop a bomb under
+                        map = dropBomb(map, players[who_is_playing - 1].v_pos + 1, players[who_is_playing - 1].h_pos,
+                                       &players[who_is_playing - 1], players[who_is_playing - 1].bombs_car);
+                        break;
+                    case 53 : // -> 5 -> Kick a bomb to the right
+                        if (checkBombKick(map, players[who_is_playing - 1], 'R'))
+                            map = bombKick(map, rows, columns, 'R', players[who_is_playing - 1].v_pos,
+                                           players[who_is_playing -
+                                                   1].h_pos + 1);
+                        break;
+                    case 54 : // -> 6 -> Kick a bomb to the left
+                        if (checkBombKick(map, players[who_is_playing - 1], 'L'))
+                            map = bombKick(map, rows, columns, 'L', players[who_is_playing - 1].v_pos,
+                                           players[who_is_playing -
+                                                   1].h_pos - 1);
+                        break;
+                    case 55 : // -> 7 -> Kick a bomb to the top
+                        if (checkBombKick(map, players[who_is_playing - 1], 'T'))
+                            map = bombKick(map, rows, columns, 'T', players[who_is_playing - 1].v_pos - 1,
+                                           players[who_is_playing - 1].h_pos);
+                        break;
+                    case 56 : // -> 8 -> Kick a bomb to the bottom
+                        if (checkBombKick(map, players[who_is_playing - 1], 'B'))
+                            map = bombKick(map, rows, columns, 'B', players[who_is_playing - 1].v_pos + 1,
+                                           players[who_is_playing - 1].h_pos);
+                        break;
+                    case 32 : // -> space
+                        break;
+                }
+
+                printf("\n");
+                affTabMap(map, columns, rows);
+
+            }
+
+            for (int i = 0; i < player_size; i++) {
+                if (players[i].invincibility > 0) {
+                    players[i].invincibility--;
+                    printf("- Il reste %d tours d'invincibilite au joueur %d\n", players[i].invincibility, i + 1);
+                }
+            }
+
+            who_is_playing++;
+            if (who_is_playing > player_size) {
+                who_is_playing = 1;
+                checkAllBombs(map, rows, columns, players);
+            }
+            turns++;
+            //displayMap(map, rows, columns);
+            printf("\n - - TOUR(S) %d -- \n", turns);
         }
-        turns++;
-
-        printf("\n");
-        affTabMap(map, columns, rows);
-        //displayMap(map, rows, columns);
-        printf("\n - - TOUR(S) %d -- \n", turns);
-
     }
 
     return 0;
@@ -413,6 +440,32 @@ int game(char **map, int rows, int columns, int nb_bomb, int player_size) {
 int main(){
     //Gestion de l'aléatoire
     srand(time(NULL));
+
+    int rows = 20;
+    int columns = 20;
+    int nb_bomb = 2;
+    int player_size = 3;
+
+    char ** map = malloc(sizeof(char*)*rows);
+
+    for(int i = 0; i<rows; i++){
+        for(int y = 0; y<columns; y++) map[i] = malloc(sizeof(char)*columns);
+    }
+
+    for(int i = 0; i<rows; i++){
+        for(int y = 0; y<columns; y++){
+            map[i][y] = ' ';
+            if(i == 0 || i == rows-1 || y == 0 || y == columns-1) map[i][y] = 'x';
+            if(i == 9 || i == 10 || y == 9 || y == 10) map[i][y] = 'm';
+        }
+    }
+    map[3][3] = '1';
+    map[17][3] = '2';
+    map[2][16] = '3';
+
+    game(map,rows,columns,nb_bomb,player_size);
+
+    /*
 
     //Ouvre le fichier de maps
     FILE *maps = fopen("../maps.txt", "r");
@@ -460,5 +513,6 @@ int main(){
         free(playingMap);
     }
     fclose(maps);
+    */
     return 0;
 }
