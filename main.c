@@ -7,6 +7,21 @@
 #include "menu.h"
 #include "map.h"
 
+char **replacePtoPlayer(char **map, int rows, int columns) {
+    int cmpt = 49;
+
+    for(int i=0; i<rows; i++) {
+        for(int j=0; j<columns; j++) {
+            if(map[i][j] == 'p') {
+                map[i][j] = cmpt;
+                cmpt++;
+            }
+        }
+    }
+
+    return map;
+}
+
 void findPlayerOnTheMap(char** map, int rows, int columns, int player_id, Player * players){
 
     int player_car = 'X';
@@ -54,9 +69,6 @@ int checkIfWin(Player * players, int player_size){
    if(count == 0) return 0;
 
    return -1;
-}
-
-void checkInvincibilities(){
 }
 
 void isOutOfTheMap(char ** map, int rows, int columns, Player * player, int v_increment, int h_increment){
@@ -141,11 +153,12 @@ char ** movePlayer(char** map, int rows, int columns, Player * player, char dire
     return map;
 }
 
-int game(int player_size) {
-    int rows = 20;
-    int columns = 20;
-    char **map = malloc(sizeof(char *) * rows);
+int game(char **map, int rows, int columns, int nb_bomb, int player_size) {
+    //int rows = 20;
+    //int columns = 20;
+    //char **map = malloc(sizeof(char *) * rows);
 
+    /*
     for (int i = 0; i < rows; i++) {
         for (int y = 0; y < columns; y++) map[i] = malloc(sizeof(char) * columns);
     }
@@ -160,19 +173,22 @@ int game(int player_size) {
     map[3][3] = '1';
     map[17][3] = '2';
     map[2][16] = '3';
+    */
 
-    displayMap(map, rows, columns);
+    replacePtoPlayer(map, rows, columns);
+    affTabMap(map, columns, rows);
+    //displayMap(map, rows, columns);
 
     ///Players Inits :
 
     Player player_1 = {
-            .hp = 3,
-            .max_hp = 3,
-            .max_bombs = 2,
+            .hp = 1,
+            .max_hp = 1,
+            .max_bombs = nb_bomb,
             .range = 2,
-            .current_bombs = 2,
+            .current_bombs = nb_bomb,
             .invincibility = 0, //isn't invincible yet
-            .bomb_special_power_up = 1, //don't have any special power up
+            .bomb_special_power_up = -1, //don't have any special power up
             .heart=0, //didn't get a heart this game
             .bombs_car="ABC",
             .dead = 0,
@@ -181,11 +197,11 @@ int game(int player_size) {
     };
 
     Player player_2 = {
-            .hp = 3,
-            .max_hp = 3,
-            .max_bombs = 2,
+            .hp = 1,
+            .max_hp = 1,
+            .max_bombs = nb_bomb,
             .range = 2,
-            .current_bombs = 2,
+            .current_bombs = nb_bomb,
             .invincibility = 0, //isn't invincible yet
             .bomb_special_power_up = -1, //don't have any special power up
             .heart=0, //didn't get a heart this game
@@ -196,11 +212,11 @@ int game(int player_size) {
     };
 
     Player player_3 = {
-            .hp = 3,
-            .max_hp = 3,
-            .max_bombs = 2,
+            .hp = 1,
+            .max_hp = 1,
+            .max_bombs = nb_bomb,
             .range = 2,
-            .current_bombs = 2,
+            .current_bombs = nb_bomb,
             .invincibility = 0, //isn't invincible yet
             .bomb_special_power_up = -1, //don't have any special power up
             .heart=0, //didn't get a heart this game
@@ -211,16 +227,16 @@ int game(int player_size) {
     };
 
     Player player_4 = {
-            .hp = 3,
-            .max_hp = 3,
-            .max_bombs = 2,
+            .hp = 1,
+            .max_hp = 1,
+            .max_bombs = nb_bomb,
             .range = 2,
-            .current_bombs = 2,
+            .current_bombs = nb_bomb,
             .invincibility = 0, //isn't invincible yet
             .bomb_special_power_up = -1, //don't have any special power up
             .heart=0, //didn't get a heart this game
             .bombs_car="JKL",
-            .dead = 1,
+            .dead = 0,
             .v_pos = 0,
             .h_pos = 0
     };
@@ -235,16 +251,20 @@ int game(int player_size) {
     int turns = 1;
     int who_is_playing = 1;
 
-    printf("\n - - TOUR(S) %d -- \n", turns);
+    printf("\n -- TOUR(S) %d -- \n", turns);
 
     while (is_playing == 1) {
 
         for (int i = 0; i < player_size; i++) if (players[i].hp <= 0 && players[i].dead == 0) playersDeath(map, players, player_size);
         int win = checkIfWin(players, player_size);
         if (win != 0 && win != -1) {
+            printf("\n\n");
+            affTabMap(map, columns, rows);
             printf("\n\nLe joueur *%d* a gagne !!!!\n\n", win);
             break;
         } else if (win == 0) {
+            printf("\n\n");
+            affTabMap(map, columns, rows);
             printf("\n\nEGALITE\n\n");
             break;
         }
@@ -252,7 +272,22 @@ int game(int player_size) {
         if (players[who_is_playing - 1].dead) who_is_playing++;
 
         printf("\nACTIONS : ");
-        printf("\nC'est au joueur %d de jouer !\n", who_is_playing);
+        int player_car;
+        switch(who_is_playing) {
+            case 1 :
+                player_car = 6;
+                break;
+            case 2 :
+                player_car = 3;
+                break;
+            case 3 :
+                player_car = 5;
+                break;
+            case 4 :
+                player_car = 4;
+                break;
+        }
+        printf("\nC'est au joueur %c de jouer !\n", player_car);
         printf("- Fleche de droite si tu veux aller a droite\n");
         printf("- Fleche de gauche si tu veux aller a gauche\n");
         printf("- Fleche du bas si tu veux aller bas\n");
@@ -351,6 +386,13 @@ int game(int player_size) {
                 break;
         }
 
+        for(int i=0; i<player_size; i++) {
+            if(players[i].invincibility > 0) {
+                players[i].invincibility--;
+                printf("- Il reste %d tours d'invincibilite au joueur %d\n", players[i].invincibility, i+1);
+            }
+        }
+
         who_is_playing++;
         if (who_is_playing > player_size) {
             who_is_playing = 1;
@@ -358,8 +400,9 @@ int game(int player_size) {
         }
         turns++;
 
-
-        displayMap(map, rows, columns);
+        printf("\n");
+        affTabMap(map, columns, rows);
+        //displayMap(map, rows, columns);
         printf("\n - - TOUR(S) %d -- \n", turns);
 
     }
@@ -368,7 +411,6 @@ int game(int player_size) {
 }
 
 int main(){
-
     //Gestion de l'aléatoire
     srand(time(NULL));
 
@@ -397,32 +439,21 @@ int main(){
     //Début de la boucle de jeu
     system("cls");
 
-    /*
-    pos = posCurseurNbJoueurs(maps, nbJoueurs);
-    sizeMapsSelected = 4;
-    mapsSelected = malloc(sizeof(int) * sizeMapsSelected);
-    for(int i=0; i<sizeMapsSelected; i++) {
-        mapsSelected[i] = 1;
-    }
-    */
-
-    printf("nbJoueurs=%d\nsizeMapsSelected=%d\nmapsSelected=", nbJoueurs, sizeMapsSelected);
-    for(int i=0; i<sizeMapsSelected; i++) {
-        printf("%d;", mapsSelected[i]);
-    }
-    printf("\n");
-    //while(1);
-
     int isPlaying = 1;
     int input = 0;
 
     while(isPlaying) {
         playingMap = initGame(&nbBombeDepart, &playingMapWidth, &playingMapHeight, &mapPrecedente, maps, pos, mapsSelected, sizeMapsSelected);
-        printf("nbBombeDepart=%d; playingMapWidth=%d; playingMapHeight=%d;\nplayingMap=\n", nbBombeDepart, playingMapWidth, playingMapHeight);
-        affTabMap(playingMap, playingMapWidth, playingMapHeight);
+        //printf("nbBombeDepart=%d; playingMapWidth=%d; playingMapHeight=%d;\nplayingMap=\n", nbBombeDepart, playingMapWidth, playingMapHeight);
+        //affTabMap(playingMap, playingMapWidth, playingMapHeight);
+
+        game(playingMap, playingMapHeight, playingMapWidth, nbBombeDepart, nbJoueurs+2);
+
+        printf("\nAppuyez sur n'importe quel touche pour recommencer\n");
+        printf("Appuyez sur Echap ou 0 pour quitter le jeu\n");
 
         input = getch();
-        if(input == 27) {
+        if(input == 27 || input == 48) {
             isPlaying = 0;
         }
 

@@ -24,9 +24,9 @@ void affCharMap(char car) {
     }
         //Bombes
     else if(car=='A' || car=='D' || car=='G' || car=='J') {
-        printf("%c", 207);
+        printf("O");
     } else if(car=='B' || car=='E' || car=='H' || car=='K') {
-        printf("%c", 15);
+        printf("%c", 207);
     } else if(car=='C' || car=='F' || car=='I' || car=='L') {
         printf("%c", 64);
     }

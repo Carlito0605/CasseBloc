@@ -113,7 +113,7 @@ void dropObject(char bomb, Player * players){
 
     int max = 100;
     int min = 0;
-    int dice_random_max = 3;
+    int dice_random_max = 6;
     int player = findPlayerWithBomb(bomb); //check which player broke the wall
 
     if(player != -1){ //If he finds a player
@@ -379,7 +379,7 @@ char** dropBomb(char**map, int v_pos, int h_pos, Player* player, char* bomb_car)
         if(player->current_bombs > 0){
             map[v_pos][h_pos] = bomb_car[0];
             player->current_bombs--;
-            printf("- Vous avez pose une bombe %c, il vous en reste %d\n",bomb_car[0],player->current_bombs);
+            printf("- Vous avez pose une bombe, il vous en reste %d\n",player->current_bombs);
         }
         else printf("- Vous n'avez plus assez de bombes !\n");
     }
