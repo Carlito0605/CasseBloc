@@ -93,7 +93,25 @@ int findPlayerWithBomb(char bomb){
     return -1;
 }
 
-void dropObject(char bomb, Player * players){
+char ** clearExplosions(char**map,int rows, int columns){
+
+    for(int i = 0; i<rows; i++){
+        for(int y = 0; y<columns; y++){
+            if(map[i][y] == '*') map[i][y] = ' ';
+        }
+    }
+
+    return map;
+}
+
+char ** dropObjectSymbol(char** map, int v_pos, int h_pos){
+    int dice_random_max = 6;
+    int dice = rand() % dice_random_max;
+    if(dice == 0) map[v_pos][h_pos] = '#';
+    return map;
+}
+
+void dropObject(Player * player,int player_number){
 
     /// This function has 1 out of n(dice_random_max) chance to drop an object
     /// Then the object is random beetween those 10 :
@@ -113,75 +131,64 @@ void dropObject(char bomb, Player * players){
 
     int max = 100;
     int min = 0;
-    int dice_random_max = 6;
-    int player = findPlayerWithBomb(bomb); //check which player broke the wall
 
-    if(player != -1){ //If he finds a player
-        //printf("*** DEBUG *** -> La bombe qui explose le mur est la bombe du joueur %d !\n",player+1);
-        int random = rand() % max + min;
-        int dice = rand() % dice_random_max;
-        if(dice == 0){
-            //printf("*** DEBUG *** Random -> %d\n",random);
-            if(random <= 20){ // 20% to get it
-                printf("- Le Joueur *%d* ramasse 'Bomb up' !!! Il a une bombe en plus.\n",player+1);
-                players[player].max_bombs++;
-                players[player].current_bombs++;
-            }
-            if(random > 20 && random <= 40){ // 20% to get it
-                printf("- Le Joueur *%d* ramasse 'Bomb down'... Il a une bombe en moins.\n",player+1);
-                if(players[player].max_bombs >= 2){
-                    players[player].current_bombs--;
-                    players[player].max_bombs--;
-                }
-                else printf("** Le joueur ne peut pas avoir moins de bombes **\n");
-            }
-            if(random > 40 && random <= 60){ // 20% to get it
-                printf("- Le Joueur *%d* ramasse 'Flamme Jaune' !!! Augmente de 1 la portée de ses bombes.\n",player+1);
-                players[player].range++;
-            }
-            if(random > 60 && random <= 80){ // 20% to get it
-                printf("- Le Joueur *%d* ramasse 'Flamme Bleu' ... Diminue de 1 la portée de ses bombes.\n",player+1);
-                if(players[player].range >= 2) players[player].range--;
-                else printf("** La range ne peut pas être plus baissee **\n");
-            }
-            if(random > 80 && random <= 82){ // 2% to get it
-                printf("- LE JOUEUR *%d* RAMASSE 'FLAMME ROUGE' !!! Mets la portée de ses bombes au MAXIMUM !\n",player+1);
-                players[player].range+=100000000;
-            }
-            if(random > 82 && random <= 87){ // 5% to get it
-                printf("- Le Joueur *%d* ramasse 'Passe bombes' !!! Permet de passer à travers les bombes !",player+1);
-                if(players[player].bomb_special_power_up == 1) printf("\n(Remplace 'Bomb-Kick')");
-                printf("\n");
-                players[player].bomb_special_power_up=0;
-            }
-            if(random > 87 && random <= 92){ // 5% to get it
-                printf("- Le Joueur *%d* ramasse 'Bomb-Kick' !!! Permet de passer à travers les bombes !",player+1);
-                if(players[player].bomb_special_power_up == 0) printf("\n(Remplace 'Passe bombes')");
-                printf("\n");
-                players[player].bomb_special_power_up=1;
-            }
-            if(random > 92 && random <= 95){ // 3% to get it
-                printf("- Le Joueur *%d* ramasse 'Invincibilité' !!! Le joueur est invincible pendant 2 tours !\n",player+1);
-                players[player].invincibility=2;
-            }
-            if(random > 95 && random <= 97){ // 2% to get it
-                printf("- Le Joueur *%d* ramasse 'Coeur' !!! Vous survivrez aux prochains dégats mortels !",player+1);
-                if(players[player].heart!=-1) players[player].heart=1;
-                else printf("** Vous avez déjà eu un coeur cette partie ! Vous n'avez donc pas de coeur ! **");
-                printf("\n");
-            }
-            if(random > 97 && random <= 100){ // 3% to get it
-                printf("- Le Joueur *%d* ramasse 'Vie' !!! Vous gagnez 1 PV !\n",player+1);
-                players[player].max_hp++;
-                players[player].hp++;
-            }
-            //displayPlayersStats(players,4); //DEBUG
+    //printf("*** DEBUG *** -> La bombe qui explose le mur est la bombe du joueur %d !\n",player+1);
+    int random = rand() % max + min;
+    //printf("*** DEBUG *** Random -> %d\n",random);
+    if(random <= 20){ // 20% to get it
+        printf("- Le Joueur *%d* ramasse 'Bomb up' !!! Il a une bombe en plus.\n",player_number);
+        player->max_bombs++;
+        player->current_bombs++;
+    }
+    if(random > 20 && random <= 40){ // 20% to get it
+        printf("- Le Joueur *%d* ramasse 'Bomb down'... Il a une bombe en moins.\n",player_number);
+        if(player->max_bombs >= 2){
+            player->current_bombs--;
+            player->max_bombs--;
         }
+        else printf("** Le joueur ne peut pas avoir moins de bombes **\n");
     }
-    else{
-        printf("*** DEBUG *** -> Aucun joueur n'a été trouvé dans 'dropObject()' !\n");
-        printf("*** DEBUG *** -> %c\n",bomb);
+    if(random > 40 && random <= 60){ // 20% to get it
+        printf("- Le Joueur *%d* ramasse 'Flamme Jaune' !!! Augmente de 1 la portée de ses bombes.\n",player_number);
+        player->range++;
     }
+    if(random > 60 && random <= 80){ // 20% to get it
+        printf("- Le Joueur *%d* ramasse 'Flamme Bleu' ... Diminue de 1 la portée de ses bombes.\n",player_number);
+        if(player->range >= 2) player->range--;
+        else printf("** La range ne peut pas être plus baissee **\n");
+    }
+    if(random > 80 && random <= 82){ // 2% to get it
+        printf("- LE JOUEUR *%d* RAMASSE 'FLAMME ROUGE' !!! Mets la portée de ses bombes au MAXIMUM !\n",player_number);
+        player->range+=100000000;
+    }
+    if(random > 82 && random <= 87){ // 5% to get it
+        printf("- Le Joueur *%d* ramasse 'Passe bombes' !!! Permet de passer à travers les bombes !",player_number);
+        if(player->bomb_special_power_up == 1) printf("\n(Remplace 'Bomb-Kick')");
+        printf("\n");
+        player->bomb_special_power_up=0;
+    }
+    if(random > 87 && random <= 92){ // 5% to get it
+        printf("- Le Joueur *%d* ramasse 'Bomb-Kick' !!! Permet de pousser une bombe jusqu'au prochaine obstacle !",player_number);
+        if(player->bomb_special_power_up == 0) printf("\n(Remplace 'Passe bombes')");
+        printf("\n");
+        player->bomb_special_power_up=1;
+    }
+    if(random > 92 && random <= 95){ // 3% to get it
+        printf("- Le Joueur *%d* ramasse 'Invincibilité' !!! Le joueur est invincible pendant 2 tours !\n",player_number);
+        player->invincibility=2;
+    }
+    if(random > 95 && random <= 97){ // 2% to get it
+        printf("- Le Joueur *%d* ramasse 'Coeur' !!! Vous survivrez aux prochains dégats mortels !",player_number);
+        if(player->heart!=-1) player->heart=1;
+        else printf("** Vous avez déjà eu un coeur cette partie ! Vous n'avez donc pas de coeur ! **");
+        printf("\n");
+    }
+    if(random > 97 && random <= 100){ // 3% to get it
+        printf("- Le Joueur *%d* ramasse 'Vie' !!! Vous gagnez 1 PV !\n",player_number);
+        player->max_hp++;
+        player->hp++;
+    }
+    //displayPlayersStats(players,4); //DEBUG
 }
 
 void takeDamage(char player_number,Player * players){
@@ -222,9 +229,10 @@ char** explosionAtThatPlace(char**map, int rows, int columns, int v_pos, int h_p
     /// 'bomb' is the caracter of the bomb that explosed
 
     if(map[v_pos][h_pos] == 'm'){ //Destroyable wall
-        map[v_pos][h_pos] = ' '; //Replace the wall by nothing
+        map[v_pos][h_pos] = '*'; //Replace the wall by an explosion
         //printf("\n** DEBUG ** -> BOMB : %c\n",bomb);
-        dropObject(bomb,players);
+        map = dropObjectSymbol(map,v_pos,h_pos);
+        //dropObject(bomb,players);
     }
     else if(map[v_pos][h_pos]>='1' && map[v_pos][h_pos]<='4'){ //Player
         takeDamage(map[v_pos][h_pos],players);
@@ -265,7 +273,7 @@ char** bombExplosion(char**map, int rows, int columns, int v_pos, int h_pos, int
     /// If there is a wall it stop
 
     char bomb = map[v_pos][h_pos];
-    map[v_pos][h_pos] = ' ';
+    map[v_pos][h_pos] = '*';
     int top_stop = 0;
     int bottom_stop = 0;
     int right_stop = 0;
@@ -280,12 +288,12 @@ char** bombExplosion(char**map, int rows, int columns, int v_pos, int h_pos, int
                     if(map[v_pos+i][h_pos] == 'm' || (map[v_pos+i][h_pos]>='1' && map[v_pos+i][h_pos]<='4')){
                         map = explosionAtThatPlace(map,rows,columns,v_pos+i,h_pos,players,bomb);
                     }
-                    else{
+                    else if(map[v_pos+i][h_pos] != '*' && map[v_pos+i][h_pos] != '#'){
                         int new_range = checkRange(map[v_pos+i][h_pos],players);
                         map = bombExplosion(map,rows,columns,v_pos+i,h_pos,new_range,players); //Chain explosion
-                    }
+                    }else map[v_pos+i][h_pos] = '*';
                 }
-            }
+            }else map[v_pos+i][h_pos] = '*';
         }
         if((v_pos-i) >= 0){ //On top of the bomb
             if(map[v_pos-i][h_pos] != ' '){
@@ -294,12 +302,12 @@ char** bombExplosion(char**map, int rows, int columns, int v_pos, int h_pos, int
                     if(map[v_pos-i][h_pos] == 'm' || (map[v_pos-i][h_pos]>='1' && map[v_pos-i][h_pos]<='4')){
                         map = explosionAtThatPlace(map,rows,columns,v_pos-i,h_pos,players,bomb);
                     }
-                    else{
+                    else if(map[v_pos-i][h_pos] != '*' && map[v_pos-i][h_pos] != '#'){
                         int new_range = checkRange(map[v_pos-i][h_pos],players);
                         map = bombExplosion(map,rows,columns,v_pos-i,h_pos,new_range,players); //Chain explosion
-                    }
+                    }else map[v_pos-i][h_pos] = '*';
                 }
-            }
+            }else map[v_pos-i][h_pos] = '*';
         }
         if((h_pos+i) < columns){ //Right of the bomb
             if(map[v_pos][h_pos+i] != ' '){
@@ -308,12 +316,12 @@ char** bombExplosion(char**map, int rows, int columns, int v_pos, int h_pos, int
                     if(map[v_pos][h_pos+i] == 'm' || (map[v_pos][h_pos+i]>='1' && map[v_pos][h_pos+i]<='4')){
                         map = explosionAtThatPlace(map,rows,columns,v_pos,h_pos+i,players,bomb);
                     }
-                    else{
+                    else if(map[v_pos][h_pos+i] != '*' && map[v_pos][h_pos+i] != '#'){
                         int new_range = checkRange(map[v_pos][h_pos+i],players);
                         map = bombExplosion(map,rows,columns,v_pos,h_pos+i,new_range,players); //Chain explosion
-                    }
+                    }else map[v_pos][h_pos+i] = '*';
                 }
-            }
+            }else map[v_pos][h_pos+i] = '*';
         }
         if((h_pos-i) >= 0){ //Left of the bomb
             if(map[v_pos][h_pos-i] != ' '){
@@ -322,12 +330,12 @@ char** bombExplosion(char**map, int rows, int columns, int v_pos, int h_pos, int
                     if(map[v_pos][h_pos-i] == 'm' || (map[v_pos][h_pos-i]>='1' && map[v_pos][h_pos-i]<='4')){
                         map = explosionAtThatPlace(map,rows,columns,v_pos,h_pos-i,players,bomb);
                     }
-                    else{
+                    else if(map[v_pos][h_pos-i] != '*' && map[v_pos][h_pos-i] != '#'){
                         int new_range = checkRange(map[v_pos][h_pos-i],players);
                         map = bombExplosion(map,rows,columns,v_pos,h_pos-i,new_range,players); //Chain explosion
-                    }
+                    }else map[v_pos][h_pos-i] = '*';
                 }
-            }
+            }else map[v_pos][h_pos-i] = '*';
         }
     }
 
