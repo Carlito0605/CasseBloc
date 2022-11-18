@@ -453,32 +453,6 @@ int game(char **map, int rows, int columns, int nb_bomb, int player_size) {
 int main(){
     //Gestion de l'aléatoire
     srand(time(NULL));
-
-    int rows = 20;
-    int columns = 20;
-    int nb_bomb = 2;
-    int player_size = 3;
-
-    char ** map = malloc(sizeof(char*)*rows);
-
-    for(int i = 0; i<rows; i++){
-        for(int y = 0; y<columns; y++) map[i] = malloc(sizeof(char)*columns);
-    }
-
-    for(int i = 0; i<rows; i++){
-        for(int y = 0; y<columns; y++){
-            map[i][y] = ' ';
-            if(i == 0 || i == rows-1 || y == 0 || y == columns-1) map[i][y] = 'x';
-            if(i == 9 || i == 10 || y == 9 || y == 10) map[i][y] = 'm';
-        }
-    }
-    map[7][7] = '1';
-    map[17][3] = '2';
-    map[15][15] = '3';
-
-    game(map,rows,columns,nb_bomb,player_size);
-
-    /*
     
     //Ouvre le fichier de maps
     FILE *maps = fopen("../maps.txt", "r");
@@ -526,6 +500,5 @@ int main(){
         free(playingMap);
     }
     fclose(maps);
-    */
     return 0;
 }
