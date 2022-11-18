@@ -87,7 +87,9 @@ void isOutOfTheMap(char ** map, int rows, int columns, Player * player, int v_in
     }
 }
 
-char ** movePlayer(char** map, int rows, int columns, Player * player, char direction){
+char ** movePlayer(char** map, int rows, int columns, Player * player, char direction, int player_number){
+
+
 
     char temp = map[player->v_pos][player->h_pos];
     map[player->v_pos][player->h_pos] = ' ';
@@ -119,11 +121,11 @@ char ** movePlayer(char** map, int rows, int columns, Player * player, char dire
         if(next_h >= columns) next_h = 0;
         if(next_h < 0) next_h = columns-1;
 
-        if(map[next_v][next_h] == ' '){
+        if(map[next_v][next_h] == ' ' || map[next_v][next_h] == '#'){
             player->v_pos = next_v;
             player->h_pos = next_h;
         }
-        else if(player->bomb_special_power_up == 0 && map[next_v][next_h] >= 'A' && map[next_v][next_h] <= 'L' && map[next_v+v_increment][next_h+h_increment] == ' '){
+        else if(player->bomb_special_power_up == 0 && map[next_v][next_h] >= 'A' && map[next_v][next_h] <= 'L' && (map[next_v+v_increment][next_h+h_increment] == ' ' || map[next_v][next_h] == '#')){
             printf("\n** DEBUG ** -> Passebomb + Trou de map\n");
             player->v_pos = next_v+v_increment;
             player->h_pos = next_h+h_increment;
@@ -134,12 +136,12 @@ char ** movePlayer(char** map, int rows, int columns, Player * player, char dire
         if(player->v_pos+(v_increment*2) >= rows || player->v_pos+(v_increment*2) < 0 || player->h_pos+(h_increment*2) >= columns || player->h_pos+(h_increment*2) < 0){
             isOutOfTheMap(map,rows,columns,player,(v_increment*2),(h_increment*2));
         }
-        else if(map[player->v_pos+(v_increment*2)][player->h_pos+(h_increment*2)] == ' '){
+        else if(map[player->v_pos+(v_increment*2)][player->h_pos+(h_increment*2)] == ' ' || map[player->v_pos+(v_increment*2)][player->h_pos+(h_increment*2)] == '#'){
             player->v_pos = player->v_pos+(v_increment*2);
             player->h_pos = player->h_pos+(h_increment*2);
         }
     }
-    else if(map[player->v_pos+v_increment][player->h_pos+h_increment] != ' '){
+    else if(map[player->v_pos+v_increment][player->h_pos+h_increment] != ' ' && map[player->v_pos+v_increment][player->h_pos+h_increment] != '#'){
         printf("\n** DEBUG ** -> Vous ne pouvez pas avancer là "
                "car la prochaine case est : %c\n",map[player->v_pos+v_increment][player->h_pos+h_increment]);
     }
@@ -147,6 +149,8 @@ char ** movePlayer(char** map, int rows, int columns, Player * player, char dire
         player->v_pos += v_increment;
         player->h_pos += h_increment;
     }
+
+    if(map[player->v_pos][player->h_pos] == '#') dropObject(player,player_number);
 
     map[player->v_pos][player->h_pos] = temp;
 
@@ -270,7 +274,10 @@ int game(char **map, int rows, int columns, int nb_bomb, int player_size) {
             break;
         }
 
-        if (players[who_is_playing - 1].dead) who_is_playing++;
+        if (players[who_is_playing - 1].dead){
+            who_is_playing++;
+            if(who_is_playing > player_size) who_is_playing = 1;
+        }
 
         printf("\nACTIONS : ");
         int player_car;
@@ -346,19 +353,19 @@ int game(char **map, int rows, int columns, int nb_bomb, int player_size) {
                         switch (temp) {
                             case 72 :
                                 printf("- Vous avancez en haut\n");
-                                movePlayer(map, rows, columns, &players[who_is_playing - 1], 'T');
+                                movePlayer(map, rows, columns, &players[who_is_playing - 1], 'T',who_is_playing);
                                 break;
                             case 80 :
                                 printf("- Vous avancez en bas\n");
-                                movePlayer(map, rows, columns, &players[who_is_playing - 1], 'B');
+                                movePlayer(map, rows, columns, &players[who_is_playing - 1], 'B',who_is_playing);
                                 break;
                             case 75 :
                                 printf("- Vous avancez a gauche\n");
-                                movePlayer(map, rows, columns, &players[who_is_playing - 1], 'L');
+                                movePlayer(map, rows, columns, &players[who_is_playing - 1], 'L',who_is_playing);
                                 break;
                             case 77 :
                                 printf("- Vous avancez a droite\n");
-                                movePlayer(map, rows, columns, &players[who_is_playing - 1], 'R');
+                                movePlayer(map, rows, columns, &players[who_is_playing - 1], 'R',who_is_playing);
                                 break;
                         }
                         break;
@@ -465,12 +472,9 @@ int main(){
             if(i == 9 || i == 10 || y == 9 || y == 10) map[i][y] = 'm';
         }
     }
-    map[2][2] = '*';
-    map[7][7] = '*';
-    map[2][3] = '#';
-    map[3][3] = '1';
+    map[7][7] = '1';
     map[17][3] = '2';
-    map[2][16] = '3';
+    map[15][15] = '3';
 
     game(map,rows,columns,nb_bomb,player_size);
 
