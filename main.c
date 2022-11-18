@@ -256,7 +256,6 @@ int game(char **map, int rows, int columns, int nb_bomb, int player_size) {
     printf("\n -- TOUR(S) %d -- \n", turns);
 
     while (is_playing == 1) {
-
         for (int i = 0; i < player_size; i++) if (players[i].hp <= 0 && players[i].dead == 0) playersDeath(map, players, player_size);
         int win = checkIfWin(players, player_size);
         if (win != 0 && win != -1) {
@@ -411,9 +410,10 @@ int game(char **map, int rows, int columns, int nb_bomb, int player_size) {
                         break;
                 }
 
-                printf("\n");
-                affTabMap(map, columns, rows);
-
+                if(i != 1) {
+                    printf("\n");
+                    affTabMap(map, columns, rows);
+                }
             }
 
             for (int i = 0; i < player_size; i++) {
@@ -428,8 +428,10 @@ int game(char **map, int rows, int columns, int nb_bomb, int player_size) {
                 who_is_playing = 1;
                 checkAllBombs(map, rows, columns, players);
             }
+
             turns++;
-            //displayMap(map, rows, columns);
+            printf("\n");
+            affTabMap(map, columns, rows);
             printf("\n - - TOUR(S) %d -- \n", turns);
         }
     }
