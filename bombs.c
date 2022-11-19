@@ -653,7 +653,7 @@ int checkPlaceBomb(char **map, Player player, char direction) {
             }
             return 0;
         }
-    }
+    } else return 0;
     //Dans le cas où la direction est incorrecte
     return -1;
 }
