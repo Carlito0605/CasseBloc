@@ -142,7 +142,7 @@ char ** movePlayer(char** map, int rows, int columns, Player * player, char dire
         }
     }
     else if(map[player->v_pos+v_increment][player->h_pos+h_increment] != ' ' && map[player->v_pos+v_increment][player->h_pos+h_increment] != '#'){
-        printf("\n** DEBUG ** -> Vous ne pouvez pas avancer là "
+        printf("\n** DEBUG ** -> Vous ne pouvez pas avancer la "
                "car la prochaine case est : %c\n",map[player->v_pos+v_increment][player->h_pos+h_increment]);
     }
     else{
@@ -496,6 +496,7 @@ int main(){
         if(input == 27 || input == 48) {
             isPlaying = 0;
         }
+        system("cls");
 
         free(playingMap);
     }
