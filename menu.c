@@ -127,7 +127,14 @@ int menuPrincipal(int *rangJoueur, long *pos, FILE *maps, int **mapsSelected, in
         if(isOnTitleScreen) {
             //Crée le menu
             char *ssTitre[3] = {"Solo", "Demarrer un serveur", "Rejoindre un serveur"};
-            menu("CASSE BLOC", ssTitre, 3, rangTitre);
+            menu("                                                                                        \n"
+                 "     _/_/_/                                              _/_/_/    _/                   \n"
+                 "  _/          _/_/_/    _/_/_/    _/_/_/    _/_/        _/    _/  _/    _/_/      _/_/_/\n"
+                 " _/        _/    _/  _/_/      _/_/      _/_/_/_/      _/_/_/    _/  _/    _/  _/       \n"
+                 "_/        _/    _/      _/_/      _/_/  _/            _/    _/  _/  _/    _/  _/        \n"
+                 " _/_/_/    _/_/_/  _/_/_/    _/_/_/      _/_/_/      _/_/_/    _/    _/_/      _/_/_/   \n"
+                 "                                                                                        \n"
+                 "                                                                                        ", ssTitre, 3, rangTitre);
 
             //Tant que l'utilisateur ne change pas de menu, on récupère ses input
             while(isOnTitleScreen) {
