@@ -142,7 +142,14 @@ int menuPrincipal(int *rangJoueur, long *pos, FILE *maps, int **mapsSelected, in
                 //Appuie sur une flèche pour changer la sélection
                 if(input == 224) {
                     changeRang(&rangTitre, 3);
-                    menu("CASSE BLOC", ssTitre, 3, rangTitre);
+                    menu("                                                                                        \n"
+                         "     _/_/_/                                              _/_/_/    _/                   \n"
+                         "  _/          _/_/_/    _/_/_/    _/_/_/    _/_/        _/    _/  _/    _/_/      _/_/_/\n"
+                         " _/        _/    _/  _/_/      _/_/      _/_/_/_/      _/_/_/    _/  _/    _/  _/       \n"
+                         "_/        _/    _/      _/_/      _/_/  _/            _/    _/  _/  _/    _/  _/        \n"
+                         " _/_/_/    _/_/_/  _/_/_/    _/_/_/      _/_/_/      _/_/_/    _/    _/_/      _/_/_/   \n"
+                         "                                                                                        \n"
+                         "                                                                                        ", ssTitre, 3, rangTitre);
                 }
                 //Si touche Entrée, on change de menu
                 else if(input == 13) {
