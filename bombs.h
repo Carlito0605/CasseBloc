@@ -35,3 +35,4 @@ int checkIfOutOfTheMap(int rows, int columns,int v_pos,int h_pos);
 char** bombKick(char** map,int rows, int columns,char direction,int bomb_v_pos,int bomb_h_pos);
 void test(int rows, int columns, Player* players);
 int checkBombKick(char **map, Player player, char direction);
+int checkPlaceBomb(char **map, Player player, char direction);

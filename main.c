@@ -314,15 +314,19 @@ int game(char **map, int rows, int columns, int nb_bomb, int player_size) {
         if(is_playing != 0) {
             for(int i = max_actions; i>0; i--){
                 printf("\nIl te reste %d action(s) :\n",i);
-                printf("- Fleche de droite si tu veux aller a droite\n");
-                printf("- Fleche de gauche si tu veux aller a gauche\n");
-                printf("- Fleche du bas si tu veux aller bas\n");
-                printf("- Fleche du haut si tu veux aller haut\n");
-                printf("- Appuie sur '1' si tu veux poser une bombe a droite\n");
-                printf("- Appuie sur '2' si tu veux poser une bombe a gauche\n");
-                printf("- Appuie sur '3' si tu veux poser une bombe en haut\n");
-                printf("- Appuie sur '4' si tu veux poser une bombe en bas\n");
-
+                printf("- Appuie sur les fleche directionnelles pour te deplacer\n");
+                if(checkPlaceBomb(map,players[who_is_playing - 1], 'R')) {
+                    printf("- Appuie sur '1' si tu veux poser une bombe a droite\n");
+                }
+                if(checkPlaceBomb(map,players[who_is_playing - 1], 'L')) {
+                    printf("- Appuie sur '2' si tu veux poser une bombe a gauche\n");
+                }
+                if(checkPlaceBomb(map,players[who_is_playing - 1], 'T')) {
+                    printf("- Appuie sur '3' si tu veux poser une bombe en haut\n");
+                }
+                if(checkPlaceBomb(map,players[who_is_playing - 1], 'B')) {
+                    printf("- Appuie sur '4' si tu veux poser une bombe en bas\n");
+                }
                 if (checkBombKick(map, players[who_is_playing - 1], 'R')) {
                     printf("- Appuie sur '5' si tu kick une bombe a droite\n");
                 }
@@ -337,6 +341,7 @@ int game(char **map, int rows, int columns, int nb_bomb, int player_size) {
                 }
 
                 printf("- Appuie sur 'echap' si tu veux quitter la partie.\n");
+                printf("- Sinon, appuyez sur n'importe quel autre touche pour passer votre tour\n");
                 printf("\nInput : ");
 
                 temp = getch();
@@ -372,36 +377,35 @@ int game(char **map, int rows, int columns, int nb_bomb, int player_size) {
                     case 27 : // -> echap
                         is_playing = 0;
                         break;
-                    case 48 : // -> fin du tour
-
-                        break;
                     case 49 : // -> 1 -> Drop a bomb to the right
-                        map = dropBomb(map, players[who_is_playing - 1].v_pos, players[who_is_playing - 1].h_pos + 1,
+                        if(checkPlaceBomb(map,players[who_is_playing - 1], 'R'))
+                            map = dropBomb(map, players[who_is_playing - 1].v_pos, players[who_is_playing - 1].h_pos + 1,
                                        &players[who_is_playing - 1], players[who_is_playing - 1].bombs_car);
                         break;
                     case 50 : // -> 2 -> Drop a bomb to the left
-                        map = dropBomb(map, players[who_is_playing - 1].v_pos, players[who_is_playing - 1].h_pos - 1,
+                        if(checkPlaceBomb(map, players[who_is_playing - 1], 'L'))
+                            map = dropBomb(map, players[who_is_playing - 1].v_pos, players[who_is_playing - 1].h_pos - 1,
                                        &players[who_is_playing - 1], players[who_is_playing - 1].bombs_car);
                         break;
                     case 51 : // -> 3 -> Drop a bomb above
-                        map = dropBomb(map, players[who_is_playing - 1].v_pos - 1, players[who_is_playing - 1].h_pos,
+                        if(checkPlaceBomb(map, players[who_is_playing - 1], 'T'))
+                            map = dropBomb(map, players[who_is_playing - 1].v_pos - 1, players[who_is_playing - 1].h_pos,
                                        &players[who_is_playing - 1], players[who_is_playing - 1].bombs_car);
                         break;
                     case 52 : // -> 4 -> Drop a bomb under
-                        map = dropBomb(map, players[who_is_playing - 1].v_pos + 1, players[who_is_playing - 1].h_pos,
+                        if(checkPlaceBomb(map, players[who_is_playing - 1], 'B'))
+                            map = dropBomb(map, players[who_is_playing - 1].v_pos + 1, players[who_is_playing - 1].h_pos,
                                        &players[who_is_playing - 1], players[who_is_playing - 1].bombs_car);
                         break;
                     case 53 : // -> 5 -> Kick a bomb to the right
                         if (checkBombKick(map, players[who_is_playing - 1], 'R'))
                             map = bombKick(map, rows, columns, 'R', players[who_is_playing - 1].v_pos,
-                                           players[who_is_playing -
-                                                   1].h_pos + 1);
+                                           players[who_is_playing - 1].h_pos + 1);
                         break;
                     case 54 : // -> 6 -> Kick a bomb to the left
                         if (checkBombKick(map, players[who_is_playing - 1], 'L'))
                             map = bombKick(map, rows, columns, 'L', players[who_is_playing - 1].v_pos,
-                                           players[who_is_playing -
-                                                   1].h_pos - 1);
+                                           players[who_is_playing - 1].h_pos - 1);
                         break;
                     case 55 : // -> 7 -> Kick a bomb to the top
                         if (checkBombKick(map, players[who_is_playing - 1], 'T'))
@@ -413,7 +417,9 @@ int game(char **map, int rows, int columns, int nb_bomb, int player_size) {
                             map = bombKick(map, rows, columns, 'B', players[who_is_playing - 1].v_pos + 1,
                                            players[who_is_playing - 1].h_pos);
                         break;
-                    case 32 : // -> space
+                    default :
+                        printf("- Vous avez passe votre tour\n");
+                        i=1;
                         break;
                 }
 
