@@ -59,7 +59,7 @@ Et celles-ci comprennent même plusieurs lignes
 
 1. Lancer le jeu :
 
-![](C:\Users\charl\CLionProjects\CasseBloc\Captures d'écrans\Menu.PNG "Menu")
+![](.\Captures d'écrans\Menu.PNG "Menu")
 
       Vous pouvez lancer le jeu en double cliquant sur CasseBloc.exe !
 
@@ -76,7 +76,7 @@ Et celles-ci comprennent même plusieurs lignes
 2. Actions possibles :
       
 
-![](C:\Users\charl\CLionProjects\CasseBloc\Captures d'écrans\Debut du jeu.PNG)
+![](.\CasseBloc\Captures d'écrans\Debut du jeu.PNG)
 
       Une fois que la partie commencé voici le déroulement du jeu :
 
@@ -120,7 +120,7 @@ Et celles-ci comprennent même plusieurs lignes
       - Il peut quitter la partie en appuyant sur 'echap'
 
 
-![](C:\Users\charl\CLionProjects\CasseBloc\Captures d'écrans\Actions.PNG)
+![](.\CLionProjects\CasseBloc\Captures d'écrans\Actions.PNG)
 
 
 3. Bombes :
@@ -151,7 +151,7 @@ Et celles-ci comprennent même plusieurs lignes
       Quand une explosion touche une autre bombe, elle l'a fait exploser également et ainsi de suite.
 
 
-![](C:\Users\charl\CLionProjects\CasseBloc\Captures d'écrans\Explosion d'une bombe.PNG)
+![](.\CLionProjects\CasseBloc\Captures d'écrans\Explosion d'une bombe.PNG)
 
 
 4. Objets :
@@ -182,7 +182,7 @@ Et celles-ci comprennent même plusieurs lignes
       Vie : Augmente de 1 le nombre de points de vie du joueur.                                       -> 2% de chance de l'obtenir
 
 
-![](C:\Users\charl\CLionProjects\CasseBloc\Captures d'écrans\Récupération d'objets.PNG)
+![](.\CLionProjects\CasseBloc\Captures d'écrans\Récupération d'objets.PNG)
 
 
 5.Conditions de victoire :
