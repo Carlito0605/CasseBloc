@@ -293,7 +293,7 @@ char** bombExplosion(char**map, int rows, int columns, int v_pos, int h_pos, int
                         map = bombExplosion(map,rows,columns,v_pos+i,h_pos,new_range,players); //Chain explosion
                     }else map[v_pos+i][h_pos] = '*';
                 }
-            }else map[v_pos+i][h_pos] = '*';
+            }else if(top_stop != 1) map[v_pos+i][h_pos] = '*';
         }
         if((v_pos-i) >= 0){ //On top of the bomb
             if(map[v_pos-i][h_pos] != ' '){
@@ -307,7 +307,7 @@ char** bombExplosion(char**map, int rows, int columns, int v_pos, int h_pos, int
                         map = bombExplosion(map,rows,columns,v_pos-i,h_pos,new_range,players); //Chain explosion
                     }else map[v_pos-i][h_pos] = '*';
                 }
-            }else map[v_pos-i][h_pos] = '*';
+            }else if(bottom_stop != 1) map[v_pos-i][h_pos] = '*';
         }
         if((h_pos+i) < columns){ //Right of the bomb
             if(map[v_pos][h_pos+i] != ' '){
@@ -321,7 +321,7 @@ char** bombExplosion(char**map, int rows, int columns, int v_pos, int h_pos, int
                         map = bombExplosion(map,rows,columns,v_pos,h_pos+i,new_range,players); //Chain explosion
                     }else map[v_pos][h_pos+i] = '*';
                 }
-            }else map[v_pos][h_pos+i] = '*';
+            }else if(right_stop != 1) map[v_pos][h_pos+i] = '*';
         }
         if((h_pos-i) >= 0){ //Left of the bomb
             if(map[v_pos][h_pos-i] != ' '){
@@ -335,7 +335,7 @@ char** bombExplosion(char**map, int rows, int columns, int v_pos, int h_pos, int
                         map = bombExplosion(map,rows,columns,v_pos,h_pos-i,new_range,players); //Chain explosion
                     }else map[v_pos][h_pos-i] = '*';
                 }
-            }else map[v_pos][h_pos-i] = '*';
+            }else if(left_stop != 1) map[v_pos][h_pos-i] = '*';
         }
     }
 
