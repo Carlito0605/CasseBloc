@@ -625,32 +625,34 @@ int checkBombKick(char **map, Player player, char direction) {
  * char direction : la direction autour du joueur à tester (R->Right, L->Left, T->Top, B->Bottom). */
 int checkPlaceBomb(char **map, Player player, char direction) {
     ///Vérifie que l'emplacement à droite est vide
-    if(direction == 'R') {
-        if(map[player.v_pos][(player.h_pos)+1] == ' ') {
-            return 1;
+    if(player.current_bombs != 0){
+        if(direction == 'R') {
+            if(map[player.v_pos][(player.h_pos)+1] == ' ') {
+                return 1;
+            }
+            return 0;
         }
-        return 0;
-    }
-    //Vérifie que l'emplacement à gauche est vide
-    else if(direction == 'L') {
-        if(map[player.v_pos][(player.h_pos)-1] == ' ') {
-            return 1;
+            //Vérifie que l'emplacement à gauche est vide
+        else if(direction == 'L') {
+            if(map[player.v_pos][(player.h_pos)-1] == ' ') {
+                return 1;
+            }
+            return 0;
         }
-        return 0;
-    }
-    //Vérifie que l'emplacement en haut est vide
-    else if(direction == 'T') {
-        if(map[(player.v_pos)-1][player.h_pos] == ' ') {
-            return 1;
+            //Vérifie que l'emplacement en haut est vide
+        else if(direction == 'T') {
+            if(map[(player.v_pos)-1][player.h_pos] == ' ') {
+                return 1;
+            }
+            return 0;
         }
-        return 0;
-    }
-    //Vérifie que l'emplacement en bas est vide
-    else if(direction == 'B') {
-        if(map[(player.v_pos)+1][player.h_pos] == ' ') {
-            return 1;
+            //Vérifie que l'emplacement en bas est vide
+        else if(direction == 'B') {
+            if(map[(player.v_pos)+1][player.h_pos] == ' ') {
+                return 1;
+            }
+            return 0;
         }
-        return 0;
     }
     //Dans le cas où la direction est incorrecte
     return -1;
