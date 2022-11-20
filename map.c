@@ -1,3 +1,7 @@
+/*
+    Autheurs : Ronan KIELT
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 

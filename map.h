@@ -1,3 +1,7 @@
+/*
+    Autheurs : Ronan KIELT
+*/
+
 void affCharMap(char car);
 void affTabMap(char **tab, int tabWidth, int tabHeight);
 long posCurseurNbJoueurs(FILE *fichier, int nbJoueurs);

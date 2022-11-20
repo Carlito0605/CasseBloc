@@ -1,3 +1,7 @@
+/*
+    Autheurs : Ronan KIELT
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -8,6 +12,9 @@
 #include "map.h"
 
 char **replacePtoPlayer(char **map, int rows, int columns) {
+
+    /// This function replaces the 'P' caracters by 1 2 3 4 for each player
+
     int cmpt = 49;
 
     for(int i=0; i<rows; i++) {
@@ -23,6 +30,8 @@ char **replacePtoPlayer(char **map, int rows, int columns) {
 }
 
 void findPlayerOnTheMap(char** map, int rows, int columns, int player_id, Player * players){
+
+    /// This function finds the players caracters and update their struct positions
 
     int player_car = 'X';
 
@@ -57,22 +66,27 @@ void findPlayerOnTheMap(char** map, int rows, int columns, int player_id, Player
 
 int checkIfWin(Player * players, int player_size){
 
-   int count = 0;
+    /// This function checks the number of players still alive
+    /// If there is only one it return the number of the winner
+    /// If there is a tie it returns 0
 
-   for(int i = 0; i<player_size; i++) if(players[i].dead == 0) count++;
+    int count = 0;
+    for(int i = 0; i<player_size; i++) if(players[i].dead == 0) count++;
+    //printf("\n** DEBUG ** -> Il y a %d joueurs en vie\n",count);
+    if(count == 1){
+        for(int i = 0; i<player_size; i++) if(players[i].dead == 0) return i+1;
+    }
+    if(count == 0) return 0;
 
-   //printf("\n** DEBUG ** -> Il y a %d joueurs en vie\n",count);
-
-   if(count == 1){
-       for(int i = 0; i<player_size; i++) if(players[i].dead == 0) return i+1;
-   }
-   if(count == 0) return 0;
-
-   return -1;
+    return -1;
 }
 
 void isOutOfTheMap(char ** map, int rows, int columns, Player * player, int v_increment, int h_increment){
-    printf("\n** DEBUG ** -> Sortie de map\n");
+
+    /// This function checks if the next position of a player is out of the map
+    /// If it's out it replace him at the opposite side of the map if he can
+
+    //printf("\n** DEBUG ** -> Sortie de map\n");
     int next_v = player->v_pos+v_increment;
     int next_h = player->h_pos+h_increment;
     if(next_v >= rows) next_v = 0;
@@ -81,7 +95,7 @@ void isOutOfTheMap(char ** map, int rows, int columns, Player * player, int v_in
     if(next_h < 0) next_h = columns-1;
 
     if(map[next_v][next_h] == ' '){
-        printf("here");
+        //printf("here");
         player->v_pos = next_v;
         player->h_pos = next_h;
     }
@@ -89,7 +103,9 @@ void isOutOfTheMap(char ** map, int rows, int columns, Player * player, int v_in
 
 char ** movePlayer(char** map, int rows, int columns, Player * player, char direction, int player_number){
 
-
+    /// This function moves a player based on the direction and his position with his struct
+    /// It also launch isOutOfTheMap()
+    /// If a player has 'PasseBomb' it gives him the habilities to go throught bombs
 
     char temp = map[player->v_pos][player->h_pos];
     map[player->v_pos][player->h_pos] = ' ';
@@ -112,8 +128,8 @@ char ** movePlayer(char** map, int rows, int columns, Player * player, char dire
             break;
     }
 
-    if(player->v_pos+v_increment >= rows || player->v_pos+v_increment < 0 || player->h_pos+h_increment >= columns || player->h_pos+h_increment < 0){
-        printf("\n** DEBUG ** -> Sortie de map\n");
+    if(player->v_pos+v_increment >= rows || player->v_pos+v_increment < 0 || player->h_pos+h_increment >= columns || player->h_pos+h_increment < 0){ //Sortie de map
+        //printf("\n** DEBUG ** -> Sortie de map\n");
         int next_v = player->v_pos+v_increment;
         int next_h = player->h_pos+h_increment;
         if(next_v >= rows) next_v = 0;
@@ -121,17 +137,17 @@ char ** movePlayer(char** map, int rows, int columns, Player * player, char dire
         if(next_h >= columns) next_h = 0;
         if(next_h < 0) next_h = columns-1;
 
-        if(map[next_v][next_h] == ' ' || map[next_v][next_h] == '#'){
+        if(map[next_v][next_h] == ' ' || map[next_v][next_h] == '#'){ //if he can go on the other side of the map
             player->v_pos = next_v;
             player->h_pos = next_h;
         }
-        else if(player->bomb_special_power_up == 0 && map[next_v][next_h] >= 'A' && map[next_v][next_h] <= 'L' && (map[next_v+v_increment][next_h+h_increment] == ' ' || map[next_v][next_h] == '#')){
+        else if(player->bomb_special_power_up == 0 && map[next_v][next_h] >= 'A' && map[next_v][next_h] <= 'L' && (map[next_v+v_increment][next_h+h_increment] == ' ' || map[next_v][next_h] == '#')){ //if he has 'Passe-Bomb'
             printf("\n** DEBUG ** -> Passebomb + Trou de map\n");
             player->v_pos = next_v+v_increment;
             player->h_pos = next_h+h_increment;
         }
     }
-    else if(player->bomb_special_power_up == 0 && map[player->v_pos+v_increment][player->h_pos+h_increment] >= 'A' && map[player->v_pos+v_increment][player->h_pos+h_increment] <= 'L'){
+    else if(player->bomb_special_power_up == 0 && map[player->v_pos+v_increment][player->h_pos+h_increment] >= 'A' && map[player->v_pos+v_increment][player->h_pos+h_increment] <= 'L'){ //if he has 'Passe-Bomb'
         printf("\n** DEBUG ** -> Passebomb\n");
         if(player->v_pos+(v_increment*2) >= rows || player->v_pos+(v_increment*2) < 0 || player->h_pos+(h_increment*2) >= columns || player->h_pos+(h_increment*2) < 0){
             isOutOfTheMap(map,rows,columns,player,(v_increment*2),(h_increment*2));
@@ -150,7 +166,7 @@ char ** movePlayer(char** map, int rows, int columns, Player * player, char dire
         player->h_pos += h_increment;
     }
 
-    if(map[player->v_pos][player->h_pos] == '#') dropObject(player,player_number);
+    if(map[player->v_pos][player->h_pos] == '#') dropObject(player,player_number); //If the player move on an object
 
     map[player->v_pos][player->h_pos] = temp;
 
@@ -158,6 +174,11 @@ char ** movePlayer(char** map, int rows, int columns, Player * player, char dire
 }
 
 int game(char **map, int rows, int columns, int nb_bomb, int player_size) {
+
+    /// This function is the main function where you can find the turn and action system,
+    /// the results of every inputs of the users,
+    /// the initialization of the players
+
     //int rows = 20;
     //int columns = 20;
     //char **map = malloc(sizeof(char *) * rows);
@@ -254,7 +275,6 @@ int game(char **map, int rows, int columns, int nb_bomb, int player_size) {
     int is_playing = 1;
     int turns = 1;
     int who_is_playing = 1;
-    int not_ready = 0;
     int max_actions = 3;
 
     printf("\n -- TOUR(S) %d -- \n", turns);

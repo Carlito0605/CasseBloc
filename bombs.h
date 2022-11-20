@@ -1,6 +1,6 @@
-//
-// Created by charl on 13/11/2022.
-//
+/*
+    Autheurs : Charles CRETOIS
+*/
 
 typedef struct player{
     int hp;

@@ -23,6 +23,8 @@
 
    Les évaluateurs sont Nathanael Demacon et Mickaël Saint-Martin.
 
+   Lien du Git : https://github.com/Carlito0605/CasseBloc
+
 ### 2. Ce qui a été fait :
 
 * Positionnement d'une bombe (à côté du joueur)
