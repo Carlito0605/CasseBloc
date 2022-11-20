@@ -13,7 +13,15 @@
 
 ### 1. Présentation du projet :
 
+   Le but de ce projet est de créer un jeu multijoueur qui n'est pas du tout un plagiat de bomberman.
+   
+   Ce projet doit être coder en C et est un travaille de groupe.
+   
+   Il a été réalisé en 1 mois et a été partagé aux collaborateurs via GIT en Gitflow.
 
+   Ce projet avait pour but de synthétiser tout ce qui a été apris durant la piscine de C de l'ESGI de 3ème année.
+
+   Les évaluateurs sont Nathanael Demacon et Mickaël Saint-Martin.
 
 ### 2. Ce qui a été fait :
 

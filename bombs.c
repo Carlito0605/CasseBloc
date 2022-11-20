@@ -78,17 +78,15 @@ void displayPlayersStats(Player * players,int players_size){
 int findPlayerWithBomb(char bomb){
 
     ///Return the id of the owner of the bomb
-    /// C -> Player 1
-    /// F -> Player 2
-    /// I -> Player 3
-    /// L -> Player 4
+    /// ABC -> Player 1
+    /// DEF -> Player 2
+    /// GHI -> Player 3
+    /// JKL -> Player 4
 
-    switch(bomb){
-        case 'C': return 0;
-        case 'F': return 1;
-        case 'I': return 2;
-        case 'L': return 3;
-    }
+    if(bomb >= 'A' && bomb <= 'C') return 0;
+    if(bomb >= 'D' && bomb <= 'F') return 1;
+    if(bomb >= 'G' && bomb <= 'I') return 2;
+    if(bomb >= 'J' && bomb <= 'L') return 3;
 
     return -1;
 }
