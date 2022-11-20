@@ -32,6 +32,7 @@
 * Explosion bloquée par un mur
 * Explosion d'un joueur avec un bombe
 * Explosion d'un mur destructible avec une bombe
+* Explosions passent à travers les trous
 * Propagation de bombes
 * Récupérations d'objets
 * Gestion de la mort d'un joueur
@@ -52,7 +53,6 @@
 ### 3. Ce qui n'a pas été fait :
 
 * Positionnement d'une bombe à l'emplacement du joueur
-* Explosions passent à travers les trous
 * Démarrer le serveur
 * Rejoindre un serveur
 * Serveur Multijoueur

@@ -277,64 +277,105 @@ char** bombExplosion(char**map, int rows, int columns, int v_pos, int h_pos, int
     int right_stop = 0;
     int left_stop = 0;
     char wall = 'x';
+    int top_count = 0;
+    int bottom_count = rows-1;
+    int right_count = 0;
+    int left_count = columns-1;
 
     for(int i = 1; i<=range; i++){ //While we didn't reach the end of the range of the explosion
-        if((v_pos+i) < rows){ //Under the bomb
-            if(map[v_pos+i][h_pos] != ' '){
-                if(map[v_pos+i][h_pos] == wall) top_stop = 1; //Stop to a wall
-                else if(top_stop == 0){
-                    if(map[v_pos+i][h_pos] == 'm' || (map[v_pos+i][h_pos]>='1' && map[v_pos+i][h_pos]<='4')){
-                        map = explosionAtThatPlace(map,rows,columns,v_pos+i,h_pos,players,bomb);
-                    }
-                    else if(map[v_pos+i][h_pos] != '*' && map[v_pos+i][h_pos] != '#'){
-                        int new_range = checkRange(map[v_pos+i][h_pos],players);
-                        map = bombExplosion(map,rows,columns,v_pos+i,h_pos,new_range,players); //Chain explosion
-                    }else map[v_pos+i][h_pos] = '*';
-                }
-            }else if(top_stop != 1) map[v_pos+i][h_pos] = '*';
+        int top_value;
+        int bottom_value;
+        int right_value;
+        int left_value;
+
+        if((v_pos+i) < rows){
+            top_value = v_pos+i;
+        }else{
+            top_value = top_count;
+            top_count++;
         }
-        if((v_pos-i) >= 0){ //On top of the bomb
-            if(map[v_pos-i][h_pos] != ' '){
-                if(map[v_pos-i][h_pos] == wall) bottom_stop = 1; //Stop to a wall
-                else if(bottom_stop == 0){
-                    if(map[v_pos-i][h_pos] == 'm' || (map[v_pos-i][h_pos]>='1' && map[v_pos-i][h_pos]<='4')){
-                        map = explosionAtThatPlace(map,rows,columns,v_pos-i,h_pos,players,bomb);
-                    }
-                    else if(map[v_pos-i][h_pos] != '*' && map[v_pos-i][h_pos] != '#'){
-                        int new_range = checkRange(map[v_pos-i][h_pos],players);
-                        map = bombExplosion(map,rows,columns,v_pos-i,h_pos,new_range,players); //Chain explosion
-                    }else map[v_pos-i][h_pos] = '*';
-                }
-            }else if(bottom_stop != 1) map[v_pos-i][h_pos] = '*';
+
+        if((v_pos-i) >= 0){
+            bottom_value = v_pos-i;
+        }else{
+            bottom_value = bottom_count;
+            bottom_count--;
         }
-        if((h_pos+i) < columns){ //Right of the bomb
-            if(map[v_pos][h_pos+i] != ' '){
-                if(map[v_pos][h_pos+i] == wall) right_stop = 1; //Stop to a wall
-                else if(right_stop == 0){
-                    if(map[v_pos][h_pos+i] == 'm' || (map[v_pos][h_pos+i]>='1' && map[v_pos][h_pos+i]<='4')){
-                        map = explosionAtThatPlace(map,rows,columns,v_pos,h_pos+i,players,bomb);
-                    }
-                    else if(map[v_pos][h_pos+i] != '*' && map[v_pos][h_pos+i] != '#'){
-                        int new_range = checkRange(map[v_pos][h_pos+i],players);
-                        map = bombExplosion(map,rows,columns,v_pos,h_pos+i,new_range,players); //Chain explosion
-                    }else map[v_pos][h_pos+i] = '*';
-                }
-            }else if(right_stop != 1) map[v_pos][h_pos+i] = '*';
+
+        if((h_pos+i) < columns){
+            right_value = h_pos+i;
+        }else{
+            right_value = right_count;
+            right_count++;
         }
-        if((h_pos-i) >= 0){ //Left of the bomb
-            if(map[v_pos][h_pos-i] != ' '){
-                if(map[v_pos][h_pos-i] == wall) left_stop = 1; //Stop to a wall
-                else if(left_stop == 0){
-                    if(map[v_pos][h_pos-i] == 'm' || (map[v_pos][h_pos-i]>='1' && map[v_pos][h_pos-i]<='4')){
-                        map = explosionAtThatPlace(map,rows,columns,v_pos,h_pos-i,players,bomb);
-                    }
-                    else if(map[v_pos][h_pos-i] != '*' && map[v_pos][h_pos-i] != '#'){
-                        int new_range = checkRange(map[v_pos][h_pos-i],players);
-                        map = bombExplosion(map,rows,columns,v_pos,h_pos-i,new_range,players); //Chain explosion
-                    }else map[v_pos][h_pos-i] = '*';
-                }
-            }else if(left_stop != 1) map[v_pos][h_pos-i] = '*';
+
+        if((h_pos-i) >= 0){
+            left_value = h_pos-i;
+        }else{
+            left_value = left_count;
+            left_count--;
         }
+
+        //TOP
+
+        if(map[top_value][h_pos] != ' '){
+            if(map[top_value][h_pos] == wall) top_stop = 1; //Stop to a wall
+            else if(top_stop == 0){
+                if(map[top_value][h_pos] == 'm' || (map[top_value][h_pos]>='1' && map[top_value][h_pos]<='4')){
+                    map = explosionAtThatPlace(map,rows,columns,top_value,h_pos,players,bomb);
+                }
+                else if(map[top_value][h_pos] != '*' && map[top_value][h_pos] != '#'){
+                    int new_range = checkRange(map[top_value][h_pos],players);
+                    map = bombExplosion(map,rows,columns,top_value,h_pos,new_range,players); //Chain explosion
+                }else map[top_value][h_pos] = '*';
+            }
+        }else if(top_stop != 1) map[top_value][h_pos] = '*';
+
+
+        //BOTTOM
+
+        if(map[bottom_value][h_pos] != ' '){
+            if(map[bottom_value][h_pos] == wall) bottom_stop = 1; //Stop to a wall
+            else if(bottom_stop == 0){
+                if(map[bottom_value][h_pos] == 'm' || (map[bottom_value][h_pos]>='1' && map[bottom_value][h_pos]<='4')){
+                    map = explosionAtThatPlace(map,rows,columns,bottom_value,h_pos,players,bomb);
+                }
+                else if(map[bottom_value][h_pos] != '*' && map[bottom_value][h_pos] != '#'){
+                    int new_range = checkRange(map[bottom_value][h_pos],players);
+                    map = bombExplosion(map,rows,columns,bottom_value,h_pos,new_range,players); //Chain explosion
+                }else map[bottom_value][h_pos] = '*';
+            }
+        }else if(bottom_stop != 1) map[bottom_value][h_pos] = '*';
+
+        //RIGHT
+
+        if(map[v_pos][right_value] != ' '){
+            if(map[v_pos][right_value] == wall) right_stop = 1; //Stop to a wall
+            else if(right_stop == 0){
+                if(map[v_pos][right_value] == 'm' || (map[v_pos][right_value]>='1' && map[v_pos][right_value]<='4')){
+                    map = explosionAtThatPlace(map,rows,columns,v_pos,right_value,players,bomb);
+                }
+                else if(map[v_pos][right_value] != '*' && map[v_pos][right_value] != '#'){
+                    int new_range = checkRange(map[v_pos][right_value],players);
+                    map = bombExplosion(map,rows,columns,v_pos,right_value,new_range,players); //Chain explosion
+                }else map[v_pos][right_value] = '*';
+            }
+        }else if(right_stop != 1) map[v_pos][right_value] = '*';
+
+        //LEFT
+
+        if(map[v_pos][left_value] != ' '){
+            if(map[v_pos][left_value] == wall) left_stop = 1; //Stop to a wall
+            else if(left_stop == 0){
+                if(map[v_pos][left_value] == 'm' || (map[v_pos][left_value]>='1' && map[v_pos][left_value]<='4')){
+                    map = explosionAtThatPlace(map,rows,columns,v_pos,left_value,players,bomb);
+                }
+                else if(map[v_pos][left_value] != '*' && map[v_pos][left_value] != '#'){
+                    int new_range = checkRange(map[v_pos][left_value],players);
+                    map = bombExplosion(map,rows,columns,v_pos,left_value,new_range,players); //Chain explosion
+                }else map[v_pos][left_value] = '*';
+            }
+        }else if(left_stop != 1) map[v_pos][left_value] = '*';
     }
 
     return map;
