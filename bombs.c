@@ -266,7 +266,7 @@ char** bombExplosion(char**map, int rows, int columns, int v_pos, int h_pos, int
 
     /// This function explodes the area of the bomb explosion
     /// If there is an other bomb it launch the function again
-    /// If there is a desctructible wall it launch dropObject()
+    /// If there is a destructible wall it launch dropObject()
     /// If there is a player it launch takeDamage()
     /// If there is a wall it stop
 
@@ -655,7 +655,7 @@ int checkBombKick(char **map, Player player, char direction) {
         return 0;
     }
     //Dans le cas où la direction est incorrecte
-    return -1;
+    return 0;
 }
 
 /** Vérifie que le joueur actuel peut placer une bombe dans une direction donné. Retourne 1 si vrai, 0 sinon
@@ -693,6 +693,4 @@ int checkPlaceBomb(char **map, Player player, char direction) {
             return 0;
         }
     } else return 0;
-    //Dans le cas où la direction est incorrecte
-    return -1;
 }

@@ -297,7 +297,7 @@ int game(char **map, int rows, int columns, int nb_bomb, int player_size) {
                 player_car = 4;
                 break;
         }
-        printf("\nC'est au joueur %c de jouer ! Appuye sur 'entree' si tu es prets ! (ou 'echap' si tu veux quitter)\n", player_car);
+        printf("\nC'est au joueur %c de jouer ! Appuie sur 'entree' si tu es pret ! (ou 'echap' si tu veux quitter)\n", player_car);
 
         int temp = getch();
         if(temp != 13){
@@ -343,8 +343,7 @@ int game(char **map, int rows, int columns, int nb_bomb, int player_size) {
                 }
 
                 printf("- Appuie sur 'echap' si tu veux quitter la partie.\n");
-                printf("- Sinon, appuyez sur n'importe quel autre touche pour passer votre tour\n");
-                printf("\nInput : ");
+                printf("- Sinon, appuyez sur n'importe quel autre touche pour passer votre tour\n\n");
 
                 temp = getch();
 
