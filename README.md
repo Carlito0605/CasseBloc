@@ -80,7 +80,7 @@
 2. Actions possibles :
       
 
-![](Screenshot/Debut du jeu.PNG)
+![](Screenshot/Debut_du_jeu.PNG "Début du jeu")
 
       Une fois que la partie commencé voici le déroulement du jeu :
 
@@ -155,7 +155,7 @@
       Quand une explosion touche une autre bombe, elle l'a fait exploser également et ainsi de suite.
 
 
-![](Screenshot\Explosion d'une bombe.PNG)
+![](Screenshot\Explosion_dune_bombe.PNG "Explosion d'une bombe")
 
 
 4. Objets :
@@ -186,7 +186,7 @@
       Vie : Augmente de 1 le nombre de points de vie du joueur.                                       -> 2% de chance de l'obtenir
 
 
-![](Screenshot\Récupération d'objets.PNG)
+![](Screenshot\Recuperation_dobjets.PNG)
 
 
 5.Conditions de victoire :
