@@ -124,7 +124,7 @@
       - Il peut quitter la partie en appuyant sur 'echap'
 
 
-![](Screenshot\Actions.PNG)
+![](Screenshot/Actions.PNG "Actions")
 
 
 3. Bombes :
@@ -155,7 +155,7 @@
       Quand une explosion touche une autre bombe, elle l'a fait exploser également et ainsi de suite.
 
 
-![](Screenshot\Explosion_dune_bombe.PNG "Explosion d'une bombe")
+![](Screenshot/Explosion_dune_bombe.PNG "Explosion d'une bombe")
 
 
 4. Objets :
@@ -186,7 +186,7 @@
       Vie : Augmente de 1 le nombre de points de vie du joueur.                                       -> 2% de chance de l'obtenir
 
 
-![](Screenshot\Recuperation_dobjets.PNG)
+![](Screenshot/Recuperation_dobjets.PNG "Récupération d'objets")
 
 
 5.Conditions de victoire :
