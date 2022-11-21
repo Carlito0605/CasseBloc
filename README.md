@@ -63,7 +63,7 @@
 
 1. Lancer le jeu :
 
-![](.\Captures d'écrans\Menu.PNG "Menu")
+![](Captures d'écrans/Menu.PNG "Menu")
 
       Vous pouvez lancer le jeu en double cliquant sur CasseBloc.exe !
 
