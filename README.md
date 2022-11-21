@@ -80,7 +80,7 @@
 2. Actions possibles :
       
 
-![](.\CasseBloc\Captures d'écrans\Debut du jeu.PNG)
+![](Screenshot/Debut du jeu.PNG)
 
       Une fois que la partie commencé voici le déroulement du jeu :
 
@@ -124,7 +124,7 @@
       - Il peut quitter la partie en appuyant sur 'echap'
 
 
-![](.\CLionProjects\CasseBloc\Captures d'écrans\Actions.PNG)
+![](Screenshot\Actions.PNG)
 
 
 3. Bombes :
@@ -155,7 +155,7 @@
       Quand une explosion touche une autre bombe, elle l'a fait exploser également et ainsi de suite.
 
 
-![](.\CLionProjects\CasseBloc\Captures d'écrans\Explosion d'une bombe.PNG)
+![](Screenshot\Explosion d'une bombe.PNG)
 
 
 4. Objets :
@@ -186,7 +186,7 @@
       Vie : Augmente de 1 le nombre de points de vie du joueur.                                       -> 2% de chance de l'obtenir
 
 
-![](.\CLionProjects\CasseBloc\Captures d'écrans\Récupération d'objets.PNG)
+![](Screenshot\Récupération d'objets.PNG)
 
 
 5.Conditions de victoire :
